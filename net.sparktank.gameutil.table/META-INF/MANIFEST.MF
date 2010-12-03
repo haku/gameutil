@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: net.sparktank.gameutil.board
+Bundle-SymbolicName: net.sparktank.gameutil.table
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: sparktank.net
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: net.sparktank.gameutil.table,
+ net.sparktank.gameutil.table.hex
