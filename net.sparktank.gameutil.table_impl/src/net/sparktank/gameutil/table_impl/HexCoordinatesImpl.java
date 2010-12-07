@@ -24,11 +24,15 @@ public class HexCoordinatesImpl implements HexCoordinates {
 	public final int x;
 	public final int y;
 	
+	public final int hash;
+	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public HexCoordinatesImpl (int x, int y) {
 		this.x = x;
 		this.y = y;
+		
+		this.hash = (1 * (31 + this.x)) * 31 + this.y;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -44,27 +48,34 @@ public class HexCoordinatesImpl implements HexCoordinates {
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	Meta-magic feat (reduce casting time).
+	
+	public boolean equals (HexCoordinates that) {
+		return that == null ? false : this.x == that.getX() && this.y == that.getY();
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	@Override
-	public String toString() {
+	public String toString () {
 		return "hex(" + this.x + "," + this.y + ")";
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	@Override
-	public boolean equals(Object aThat) {
+	public boolean equals (Object aThat) {
 		if ( aThat == null ) return false;
 		if ( this == aThat ) return true;
 		if ( !(aThat instanceof HexCoordinatesImpl) ) return false;
 		HexCoordinatesImpl that = (HexCoordinatesImpl)aThat;
 		
-		return this.x == that.getX() && this.y == that.getY();
+		return this.equals(that);
 	}
 	
 	@Override
 	public int hashCode() {
-		return (1 * (31 + this.x)) * 31 + this.y;
+		return this.hash;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

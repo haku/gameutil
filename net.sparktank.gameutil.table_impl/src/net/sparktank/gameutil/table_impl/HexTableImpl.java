@@ -46,7 +46,7 @@ public class HexTableImpl implements HexTable {
 	 * @param height number of cells height the table should be.
 	 */
 	public HexTableImpl (int width, int height) {
-		this.cellMap = generateRectHexGrid(width, height);
+		this.cellMap = generateRectHexGrid(this, width, height);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,7 +98,7 @@ public class HexTableImpl implements HexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	static helper methods.
 	
-	protected Map<HexCoordinatesImpl, HexCellImpl> generateRectHexGrid (int w, int h) {
+	protected Map<HexCoordinatesImpl, HexCellImpl> generateRectHexGrid (HexTable table, int w, int h) {
 		Map<HexCoordinatesImpl,HexCellImpl> map = new HashMap<HexCoordinatesImpl, HexCellImpl>();
 		
 //		System.err.println("Cells:");
@@ -108,7 +108,7 @@ public class HexTableImpl implements HexTable {
 			if (y > 0 && y % 2 == 0) x_offset--;
 			for (int x = 0; x < w; x++) {
     			HexCoordinatesImpl coord = new HexCoordinatesImpl(x + x_offset, y);
-    			HexCellImpl cell = new HexCellImpl(coord);
+    			HexCellImpl cell = new HexCellImpl(table, coord);
     			map.put(coord, cell);
     			
 //    			System.err.print(" ");

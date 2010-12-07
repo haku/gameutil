@@ -22,7 +22,37 @@ package net.sparktank.gameutil.table.hex;
  * they might as well have arbitrary names.
  */
 public enum HexBearing {
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	B0, B1, B2, B3, B4, B5 // 6 arbitrary directions.
+	// 6 arbitrary directions.
+	B0( 1, -1),
+	B1( 1,  0),
+	B2( 0,  1),
+	B3(-1,  1),
+	B4(-1,  0),
+	B5( 0, -1);
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	private final int dx;
+	private final int dy;
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	HexBearing (int dx, int dy) {
+		this.dx = dx;
+		this.dy = dy;
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	public int getDx () {
+		return this.dx;
+	}
+	
+	public int getDy () {
+		return this.dy;
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

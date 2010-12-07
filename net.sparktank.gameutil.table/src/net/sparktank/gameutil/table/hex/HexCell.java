@@ -24,6 +24,8 @@ public interface HexCell extends Cell {
 	
 	public HexCoordinates getHexCoordinates ();
 	
-	public Collection<HexPiece> getHexPieces ();
+	public Collection<? extends HexCell> getAdjacentHexCells (int range);
+	
+	public Collection<? extends HexPiece> getHexPieces ();
 	
 }

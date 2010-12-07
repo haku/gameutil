@@ -22,7 +22,10 @@ public interface Cell {
 	
 	public Coordinates getCoordinates ();
 	
-	public Collection<CellAnnotation> getCellAnnotations ();
-	public Collection<Piece> getPieces ();
+	public Collection<? extends Cell> getAdjacentCells (int range);
+	
+	public Collection<? extends CellAnnotation> getCellAnnotations ();
+	
+	public Collection<? extends Piece> getPieces ();
 	
 }

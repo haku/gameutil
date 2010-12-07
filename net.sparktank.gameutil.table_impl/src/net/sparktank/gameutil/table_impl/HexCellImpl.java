@@ -18,21 +18,25 @@ package net.sparktank.gameutil.table_impl;
 
 import java.util.Collection;
 
+import net.sparktank.gameutil.table.Cell;
 import net.sparktank.gameutil.table.CellAnnotation;
 import net.sparktank.gameutil.table.Coordinates;
 import net.sparktank.gameutil.table.Piece;
 import net.sparktank.gameutil.table.hex.HexCell;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
+import net.sparktank.gameutil.table.hex.HexTable;
 
 public class HexCellImpl implements HexCell {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	private final HexTable parent;
 	private final HexCoordinates coordinates;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public HexCellImpl (HexCoordinates coordinates) {
+	public HexCellImpl (HexTable parent, HexCoordinates coordinates) {
+		this.parent = parent;
 		this.coordinates = coordinates;
 	}
 	
@@ -45,7 +49,12 @@ public class HexCellImpl implements HexCell {
 	}
 	
 	@Override
-	public Collection<HexPiece> getHexPieces() {
+	public Collection<? extends HexCell> getAdjacentHexCells(int range) {
+		throw new RuntimeException("Not implemented.");
+	}
+	
+	@Override
+	public Collection<? extends HexPiece> getHexPieces() {
 		throw new RuntimeException("Not implemented.");
 	}
 	
@@ -58,13 +67,18 @@ public class HexCellImpl implements HexCell {
 	}
 	
 	@Override
-	public Collection<CellAnnotation> getCellAnnotations() {
+	public Collection<? extends Cell> getAdjacentCells(int range) {
+		return getAdjacentHexCells(range);
+	}
+	
+	@Override
+	public Collection<? extends CellAnnotation> getCellAnnotations() {
 		throw new RuntimeException("Not implemented.");
 	}
 	
 	@Override
-	public Collection<Piece> getPieces() {
-		throw new RuntimeException("Not implemented.");
+	public Collection<? extends Piece> getPieces() {
+		return getHexPieces();
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
