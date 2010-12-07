@@ -17,6 +17,9 @@
 package net.sparktank.gameutil.table_impl;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sparktank.gameutil.table.Annotation;
 import net.sparktank.gameutil.table.Cell;
@@ -24,6 +27,7 @@ import net.sparktank.gameutil.table.CellAnnotation;
 import net.sparktank.gameutil.table.Piece;
 import net.sparktank.gameutil.table.PieceAnnotation;
 import net.sparktank.gameutil.table.hex.HexCell;
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
 import net.sparktank.gameutil.table.hex.HexTable;
 
@@ -31,67 +35,93 @@ public class HexTableImpl implements HexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Fields.
 	
-	/*
-	 * TODO define fields to track dimensions of the board.
-	 * This may well involve assuming some form of board alignment for the in memory model...
-	 * 
-	 */
+	private final Map<HexCoordinatesImpl, HexCellImpl> cellMap;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Constructors.
 	
-	public HexTableImpl (/* TODO Require dimensions here. */) {
-		
-		// TODO
-		
+	/**
+	 * This creates a square or rectangular instance of HexTable.
+	 * @param width number of cells wide the table should be.
+	 * @param height number of cells height the table should be.
+	 */
+	public HexTableImpl (int width, int height) {
+		this.cellMap = generateRectHexGrid(width, height);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	HexTable methods.
 	
 	@Override
-	public Collection<HexCell> getAllHexCells() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<? extends HexCell> getHexCells() {
+		return this.cellMap.values();
 	}
-
+	
 	@Override
-	public Collection<HexPiece> getAllHexPieces() {
-		// TODO Auto-generated method stub
-		return null;
+	public HexCell getHexCell(HexCoordinates coordinates) {
+		return this.cellMap.get(coordinates);
+	}
+	
+	@Override
+	public Collection<? extends HexPiece> getHexPieces() {
+		throw new RuntimeException("Not implemented.");
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Table methods.
 	
 	@Override
-	public Collection<Cell> getAllCells() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<? extends Cell> getCells() {
+		return this.cellMap.values();
 	}
-
+	
 	@Override
-	public Collection<Piece> getAllPieces() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<? extends Piece> getPieces() {
+		throw new RuntimeException("Not implemented.");
 	}
-
+	
 	@Override
-	public Collection<Annotation> getAllAnnotations() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<? extends Annotation> getAnnotations() {
+		throw new RuntimeException("Not implemented.");
 	}
-
+	
 	@Override
-	public Collection<CellAnnotation> getAllCellAnnotations() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<CellAnnotation> getCellAnnotations() {
+		throw new RuntimeException("Not implemented.");
 	}
-
+	
 	@Override
-	public Collection<PieceAnnotation> getAllPieceAnnotations() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<PieceAnnotation> getPieceAnnotations() {
+		throw new RuntimeException("Not implemented.");
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	static helper methods.
+	
+	protected Map<HexCoordinatesImpl, HexCellImpl> generateRectHexGrid (int w, int h) {
+		Map<HexCoordinatesImpl,HexCellImpl> map = new HashMap<HexCoordinatesImpl, HexCellImpl>();
+		
+//		System.err.println("Cells:");
+		
+		int x_offset = 0;
+		for (int y = 0; y < h; y++) {
+			if (y > 0 && y % 2 == 0) x_offset--;
+			for (int x = 0; x < w; x++) {
+    			HexCoordinatesImpl coord = new HexCoordinatesImpl(x + x_offset, y);
+    			HexCellImpl cell = new HexCellImpl(coord);
+    			map.put(coord, cell);
+    			
+//    			System.err.print(" ");
+//    			System.err.print(coord);
+			}
+//			System.err.println();
+		}
+		
+		/* Once made, the board should not be modified.
+		 * If this is changed, be sure to update getter methods so that
+		 * the modifiable form does not leak.
+		 */
+		return Collections.unmodifiableMap(map);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

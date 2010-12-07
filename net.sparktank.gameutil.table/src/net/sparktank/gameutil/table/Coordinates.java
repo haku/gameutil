@@ -18,6 +18,7 @@ package net.sparktank.gameutil.table;
 
 public interface Coordinates {
 	
-	
+	public int getX ();
+	public int getY ();
 	
 }

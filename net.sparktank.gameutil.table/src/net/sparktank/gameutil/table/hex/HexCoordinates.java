@@ -20,6 +20,6 @@ import net.sparktank.gameutil.table.Coordinates;
 
 public interface HexCoordinates extends Coordinates {
 	
-	
+	// Nothing here yet.
 	
 }

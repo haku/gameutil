@@ -20,11 +20,11 @@ import java.util.Collection;
 
 public interface Table {
 	
-	public Collection<Cell> getAllCells ();
-	public Collection<Piece> getAllPieces ();
+	public Collection<? extends Cell> getCells ();
+	public Collection<? extends Piece> getPieces ();
 	
-	public Collection<Annotation> getAllAnnotations ();
-	public Collection<CellAnnotation> getAllCellAnnotations ();
-	public Collection<PieceAnnotation> getAllPieceAnnotations ();
+	public Collection<? extends Annotation> getAnnotations ();
+	public Collection<? extends CellAnnotation> getCellAnnotations ();
+	public Collection<? extends PieceAnnotation> getPieceAnnotations ();
 	
 }
