@@ -84,4 +84,11 @@ public class HexCellImpl implements HexCell {
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	@Override
+	public String toString() {
+		return "hexCell(" + this.coordinates.getX() + "," + this.coordinates.getY() + ")";
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }
