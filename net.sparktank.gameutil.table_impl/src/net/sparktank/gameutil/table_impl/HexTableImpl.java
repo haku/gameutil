@@ -38,6 +38,8 @@ public class HexTableImpl implements HexTable {
 //	Fields.
 	
 	private final Map<HexCoordinatesImpl, HexCellImpl> cellMap;
+    private final int width;
+    private final int height;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Constructors.
@@ -48,6 +50,8 @@ public class HexTableImpl implements HexTable {
 	 * @param height number of cells height the table should be.
 	 */
 	public HexTableImpl (int width, int height) {
+		this.width = width;
+		this.height = height;
 		this.cellMap = generateRectHexGrid(this, width, height);
 	}
 	
@@ -105,6 +109,13 @@ public class HexTableImpl implements HexTable {
 	@Override
 	public Collection<PieceAnnotation> getPieceAnnotations() {
 		throw new RuntimeException("Not implemented.");
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	@Override
+	public String toString() {
+		return "HexTable(" + this.width + "x" + this.height + ")";
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
