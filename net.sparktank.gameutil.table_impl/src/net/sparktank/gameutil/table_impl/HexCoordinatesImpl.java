@@ -16,6 +16,9 @@
 
 package net.sparktank.gameutil.table_impl;
 
+import java.util.Collection;
+
+import net.sparktank.gameutil.table.Coordinates;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 
 public class HexCoordinatesImpl implements HexCoordinates {
@@ -32,10 +35,34 @@ public class HexCoordinatesImpl implements HexCoordinates {
 		this.x = x;
 		this.y = y;
 		
+		/* Since this is an immutable class,
+		 * we can cache the hash code.
+		 * Calculate in constructor to be thread-safe.
+		 */
 		this.hash = (1 * (31 + this.x)) * 31 + this.y;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	HexCoordinates methods.
+	
+	@Override
+	public Collection<? extends HexCoordinates> getAdjacentHexCoordinates(int range) {
+		if (range < 1) throw new IllegalArgumentException("Range must be 1 or more.");
+		
+		/*
+		 * TODO return a Connection of HexCoordinatesImpl objects representing
+		 * the surrounding cells.
+		 * 
+		 * NOTE: Worry about the number of HexCoordinatesImpl objects that will be
+		 * created and the recycling of them once this method actually works at all.
+		 * 
+		 */
+		
+		throw new RuntimeException("Not implemented.");
+	};
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	Coordinates methods.
 	
 	@Override
 	public int getX() {
@@ -45,6 +72,11 @@ public class HexCoordinatesImpl implements HexCoordinates {
 	@Override
 	public int getY() {
 		return this.y;
+	}
+	
+	@Override
+	public Collection<? extends Coordinates> getAdjacentCoordinates(int range) {
+		return getAdjacentHexCoordinates(range);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

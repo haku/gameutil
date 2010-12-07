@@ -16,10 +16,12 @@
 
 package net.sparktank.gameutil.table.hex;
 
+import java.util.Collection;
+
 import net.sparktank.gameutil.table.Coordinates;
 
 public interface HexCoordinates extends Coordinates {
 	
-	// Nothing here yet.
+	public Collection<? extends HexCoordinates> getAdjacentHexCoordinates (int range);
 	
 }

@@ -23,6 +23,7 @@ import net.sparktank.gameutil.table.Table;
 public interface HexTable extends Table {
 	
 	public Collection<? extends HexCell> getHexCells ();
+	public Collection<? extends HexCell> getHexCells (Collection<? extends HexCoordinates> coordinates);
 	public HexCell getHexCell (HexCoordinates coordinates);
 	
 	public Collection<? extends HexPiece> getHexPieces ();

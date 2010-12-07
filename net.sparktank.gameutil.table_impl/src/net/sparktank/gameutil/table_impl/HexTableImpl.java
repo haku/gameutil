@@ -19,6 +19,8 @@ package net.sparktank.gameutil.table_impl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import net.sparktank.gameutil.table.Annotation;
@@ -55,6 +57,16 @@ public class HexTableImpl implements HexTable {
 	@Override
 	public Collection<? extends HexCell> getHexCells() {
 		return this.cellMap.values();
+	}
+	
+	@Override
+	public Collection<? extends HexCell> getHexCells(Collection<? extends HexCoordinates> coordinates) {
+		List<HexCell> ret = new LinkedList<HexCell>();
+		for (HexCoordinates coord : coordinates) {
+			HexCell cell = getHexCell(coord);
+			ret.add(cell);
+		}
+		return ret;
 	}
 	
 	@Override

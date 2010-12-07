@@ -16,9 +16,13 @@
 
 package net.sparktank.gameutil.table;
 
+import java.util.Collection;
+
 public interface Coordinates {
 	
 	public int getX ();
 	public int getY ();
+	
+	public Collection<? extends Coordinates> getAdjacentCoordinates (int range);
 	
 }

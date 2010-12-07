@@ -50,7 +50,9 @@ public class HexCellImpl implements HexCell {
 	
 	@Override
 	public Collection<? extends HexCell> getAdjacentHexCells(int range) {
-		throw new RuntimeException("Not implemented.");
+		Collection<? extends HexCoordinates> adjCoords = this.coordinates.getAdjacentHexCoordinates(range);
+		Collection<? extends HexCell> ret = this.parent.getHexCells(adjCoords);
+		return ret;
 	}
 	
 	@Override
