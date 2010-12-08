@@ -17,6 +17,9 @@
 package net.sparktank.gameutil.table_impl;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import net.sparktank.gameutil.table.Cell;
 import net.sparktank.gameutil.table.CellAnnotation;
@@ -50,8 +53,16 @@ public class HexCellImpl implements HexCell {
 	
 	@Override
 	public Collection<? extends HexCell> getAdjacentHexCells(int range) {
-		Collection<? extends HexCoordinates> adjCoords = this.coordinates.getAdjacentHexCoordinates(range);
-		Collection<? extends HexCell> ret = this.parent.getHexCells(adjCoords);
+		Map<Integer, List<? extends HexCoordinates>> adjCoords = this.coordinates.getAdjacentHexCoordinates(range);
+		Collection<List<? extends HexCoordinates>> coordsAtRanges = adjCoords.values();
+		
+		// Collapse down the collections of coordinates at each range.
+		Collection<HexCoordinates> coords = new LinkedList<HexCoordinates>();
+		for (List<? extends HexCoordinates> coordListAtRange : coordsAtRanges) {
+			coords.addAll(coordListAtRange);
+		}
+		
+		Collection<? extends HexCell> ret = this.parent.getHexCells(coords);
 		return ret;
 	}
 	

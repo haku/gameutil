@@ -17,8 +17,13 @@
 package net.sparktank.gameutil.table_impl;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import net.sparktank.gameutil.table.Coordinates;
+import net.sparktank.gameutil.table.hex.HexBearing;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 
 public class HexCoordinatesImpl implements HexCoordinates {
@@ -46,11 +51,21 @@ public class HexCoordinatesImpl implements HexCoordinates {
 //	HexCoordinates methods.
 	
 	@Override
-	public Collection<? extends HexCoordinates> getAdjacentHexCoordinates(int range) {
+	public List<? extends HexCoordinates> getAdjacentHexCoordinates() {
+		List<HexCoordinates> ret = new LinkedList<HexCoordinates>();
+		for (HexBearing bearing : HexBearing.values()) {
+			HexCoordinates coord = new HexCoordinatesImpl(getX() + bearing.getDx(), getY() + bearing.getDy());
+			ret.add(coord);
+		}
+		return ret;
+	}
+	
+	@Override
+	public Map<Integer, List<? extends HexCoordinates>> getAdjacentHexCoordinates(int range) {
 		if (range < 1) throw new IllegalArgumentException("Range must be 1 or more.");
 		
 		/*
-		 * TODO return a Connection of HexCoordinatesImpl objects representing
+		 * Return a Collection of HexCoordinatesImpl objects representing
 		 * the surrounding cells.
 		 * 
 		 * NOTE: Worry about the number of HexCoordinatesImpl objects that will be
@@ -58,7 +73,29 @@ public class HexCoordinatesImpl implements HexCoordinates {
 		 * 
 		 */
 		
-		throw new RuntimeException("Not implemented.");
+		Map<Integer, List<? extends HexCoordinates>> coordMap = new HashMap<Integer, List<? extends HexCoordinates>>();
+		
+		List<? extends HexCoordinates> coordsAtR0 = this.getAdjacentHexCoordinates();
+		coordMap.put(Integer.valueOf(0), coordsAtR0);
+		
+		for (int r = 0; r < range; r++) {
+			Integer R = Integer.valueOf(r);
+			List<? extends HexCoordinates> coordsAtR = coordMap.get(R);
+			List<HexCoordinates> coordsBeyondR = new LinkedList<HexCoordinates>();
+			
+			for (HexCoordinates coordAtR : coordsAtR) {
+				List<? extends HexCoordinates> beyondCoords = coordAtR.getAdjacentHexCoordinates();
+				for (HexCoordinates beyondCoord : beyondCoords) {
+					if (!coordsAtR.contains(beyondCoord) && !coordsBeyondR.contains(beyondCoord) && !this.equals(beyondCoord)){
+						coordsBeyondR.add(beyondCoord);
+					}
+				}
+			}
+			
+			coordMap.put(Integer.valueOf(r + 1), coordsBeyondR);
+		}
+		
+		return coordMap;
 	};
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,7 +112,7 @@ public class HexCoordinatesImpl implements HexCoordinates {
 	}
 	
 	@Override
-	public Collection<? extends Coordinates> getAdjacentCoordinates(int range) {
+	public Map<Integer, ? extends Collection<? extends Coordinates>> getAdjacentCoordinates(int range) {
 		return getAdjacentHexCoordinates(range);
 	}
 	
