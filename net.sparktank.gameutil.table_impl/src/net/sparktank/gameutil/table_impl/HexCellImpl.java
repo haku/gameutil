@@ -56,6 +56,11 @@ public class HexCellImpl implements HexCell {
 	}
 	
 	@Override
+	public int measureHexDistanceTo (HexCell otherCell) {
+		throw new RuntimeException("Not implemented.");
+	}
+	
+	@Override
 	public Collection<? extends HexPiece> getHexPieces() {
 		throw new RuntimeException("Not implemented.");
 	}
