@@ -54,11 +54,10 @@ public class HexCellImpl implements HexCell {
 	@Override
 	public Collection<? extends HexCell> getAdjacentHexCells(int range) {
 		Map<Integer, List<? extends HexCoordinates>> adjCoords = this.coordinates.getAdjacentHexCoordinates(range);
-		Collection<List<? extends HexCoordinates>> coordsAtRanges = adjCoords.values();
 		
 		// Collapse down the collections of coordinates at each range.
 		Collection<HexCoordinates> coords = new LinkedList<HexCoordinates>();
-		for (List<? extends HexCoordinates> coordListAtRange : coordsAtRanges) {
+		for (List<? extends HexCoordinates> coordListAtRange : adjCoords.values()) {
 			coords.addAll(coordListAtRange);
 		}
 		
