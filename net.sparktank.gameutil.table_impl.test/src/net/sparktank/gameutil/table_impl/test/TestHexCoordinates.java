@@ -28,7 +28,7 @@ public class TestHexCoordinates {
 	public void testGetAdjacentHexCoordinatesRange1 () {
 		HexCoordinatesImpl coord = new HexCoordinatesImpl(1, 1);
 		
-		Map<Integer, List<? extends HexCoordinates>> adjacentHexCoordinates = coord.getAdjacentHexCoordinates(20);
+		Map<Integer, List<? extends HexCoordinates>> adjacentHexCoordinates = coord.getAdjacentHexCoordinates(60);
 		for (Entry<Integer, List<? extends HexCoordinates>> adjCoords : adjacentHexCoordinates.entrySet()) {
 			System.out.print(adjCoords.getKey());
 			System.out.print(" (");

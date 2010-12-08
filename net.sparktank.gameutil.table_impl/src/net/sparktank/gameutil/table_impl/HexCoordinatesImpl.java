@@ -73,12 +73,27 @@ public class HexCoordinatesImpl implements HexCoordinates {
 		 * 
 		 */
 		
+		// Using this to look up if we already have one is way faster than Collection.contains().
+		Map<HexCoordinates, Void> allCoords = new HashMap<HexCoordinates, Void>();
+		allCoords.put(this, null); // Where we are starting.
+		
+		// Our main return object.
 		Map<Integer, List<? extends HexCoordinates>> coordMap = new HashMap<Integer, List<? extends HexCoordinates>>();
 		
-		List<? extends HexCoordinates> coordsAtR0 = this.getAdjacentHexCoordinates();
+		// r = 0;  Where we are starting.
+		List<HexCoordinates> coordsAtR0 = new LinkedList<HexCoordinates>();
+		coordsAtR0.add(this);
 		coordMap.put(Integer.valueOf(0), coordsAtR0);
 		
-		for (int r = 0; r < range; r++) {
+		// r = 1;
+		List<? extends HexCoordinates> coordsAtR1 = this.getAdjacentHexCoordinates();
+		coordMap.put(Integer.valueOf(1), coordsAtR1);
+		for (HexCoordinates coordAtR1 : coordsAtR1) {
+			allCoords.put(coordAtR1, null);
+		}
+		
+		// r > 1;
+		for (int r = 1; r < range; r++) {
 			Integer R = Integer.valueOf(r);
 			List<? extends HexCoordinates> coordsAtR = coordMap.get(R);
 			List<HexCoordinates> coordsBeyondR = new LinkedList<HexCoordinates>();
@@ -86,8 +101,9 @@ public class HexCoordinatesImpl implements HexCoordinates {
 			for (HexCoordinates coordAtR : coordsAtR) {
 				List<? extends HexCoordinates> beyondCoords = coordAtR.getAdjacentHexCoordinates();
 				for (HexCoordinates beyondCoord : beyondCoords) {
-					if (!coordsAtR.contains(beyondCoord) && !coordsBeyondR.contains(beyondCoord) && !this.equals(beyondCoord)){
+					if (!allCoords.containsKey(beyondCoord)){
 						coordsBeyondR.add(beyondCoord);
+						allCoords.put(beyondCoord, null);
 					}
 				}
 			}
