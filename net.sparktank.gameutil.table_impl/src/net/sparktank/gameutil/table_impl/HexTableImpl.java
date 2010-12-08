@@ -68,7 +68,7 @@ public class HexTableImpl implements HexTable {
 		List<HexCell> ret = new LinkedList<HexCell>();
 		for (HexCoordinates coord : coordinates) {
 			HexCell cell = getHexCell(coord);
-			ret.add(cell);
+			if (cell != null) ret.add(cell);
 		}
 		return ret;
 	}
