@@ -16,6 +16,8 @@
 
 package net.sparktank.gameutil.table_impl.test;
 
+import java.util.Collection;
+
 import net.sparktank.gameutil.table.hex.HexCell;
 import net.sparktank.gameutil.table.hex.HexTable;
 import net.sparktank.gameutil.table_impl.HexCoordinatesImpl;
@@ -23,7 +25,7 @@ import net.sparktank.gameutil.table_impl.HexTableImpl;
 
 import org.junit.Test;
 
-public class TestTable {
+public class TestHexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	@Test
@@ -39,6 +41,18 @@ public class TestTable {
 		testHexTableHasCell(hexTable, 7, -1, false);
 		testHexTableHasCell(hexTable, -5, 10, false);
 		testHexTableHasCell(hexTable, 2, 10, false);
+	}
+	
+	@Test
+	public void testHexTableGetCells () {
+		HexTable hexTable = new HexTableImpl(100, 100);
+		
+		HexCell hexCell = hexTable.getHexCell(new HexCoordinatesImpl(50, 50)); // TODO remove need to create HexCoordinatesImpl
+		Collection<? extends HexCell> adjacentHexCells = hexCell.getAdjacentHexCells(10);
+		
+		if (adjacentHexCells.size() != 331) throw new RuntimeException();
+		
+		// TODO do a better test here.
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
