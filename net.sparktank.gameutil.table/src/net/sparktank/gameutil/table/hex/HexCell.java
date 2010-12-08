@@ -27,15 +27,11 @@ public interface HexCell extends Cell {
 	/**
 	 * Get all the cells surrounding this cell.
 	 * A range of 1 will fetch all cells adjacent to this one.
-	 * @param range
-	 * @return
 	 */
 	public Collection<? extends HexCell> getAdjacentHexCells (int range);
 	
 	/**
 	 * Calculate the number of moves needed to travel from this cell to another cell.
-	 * @param otherCell
-	 * @return
 	 */
 	public int measureHexDistanceTo (HexCell otherCell);
 	

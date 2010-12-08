@@ -20,10 +20,30 @@ import java.util.Collection;
 
 import net.sparktank.gameutil.table.Table;
 
+/**
+ * 
+ * Note:
+ * A HexTable may be any shape as long as every cell is adjacent to another cell.
+ * For this reason there are no getWidth() or getHeight() methods as they would not mean anything.
+ * 
+ * 
+ */
 public interface HexTable extends Table {
 	
+	/**
+	 * Returns all the cells on the table.
+	 */
 	public Collection<? extends HexCell> getHexCells ();
+	
+	/**
+	 * Returns all the cells on the table that are referenced by the coordinates parameter.
+	 * Any illegal entries (coordinates for which no cell exists) are ignored.
+	 */
 	public Collection<? extends HexCell> getHexCells (Collection<? extends HexCoordinates> coordinates);
+	
+	/**
+	 * Fetch a specific cell based on its coordinates.
+	 */
 	public HexCell getHexCell (HexCoordinates coordinates);
 	
 	public Collection<? extends HexPiece> getHexPieces ();

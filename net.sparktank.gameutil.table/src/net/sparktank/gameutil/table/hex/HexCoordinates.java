@@ -25,13 +25,11 @@ public interface HexCoordinates extends Coordinates {
 	
 	/**
 	 * All immediately adjacent coordinates.
-	 * @return
 	 */
 	public List<? extends HexCoordinates> getAdjacentHexCoordinates ();
 	
 	/**
 	 * 
-	 * @param range
 	 * @return key = range, value = collection of coordinates.
 	 */
 	public Map<Integer, List<? extends HexCoordinates>> getAdjacentHexCoordinates (int range);
