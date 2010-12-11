@@ -17,6 +17,7 @@
 package net.sparktank.gameutil.table.hex;
 
 import java.util.Collection;
+import java.util.List;
 
 import net.sparktank.gameutil.table.Table;
 
@@ -38,8 +39,9 @@ public interface HexTable extends Table {
 	/**
 	 * Returns all the cells on the table that are referenced by the coordinates parameter.
 	 * Any illegal entries (coordinates for which no cell exists) are ignored.
+	 * The HexCell will be returned in the same order as the HexCoordinates were passed in.
 	 */
-	public Collection<? extends HexCell> getHexCells (Collection<? extends HexCoordinates> coordinates);
+	public List<? extends HexCell> getHexCells (List<? extends HexCoordinates> coordinates);
 	
 	/**
 	 * Fetch a specific cell based on its coordinates.

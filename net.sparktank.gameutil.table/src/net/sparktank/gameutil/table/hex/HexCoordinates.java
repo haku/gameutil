@@ -34,8 +34,18 @@ public interface HexCoordinates extends Coordinates {
 	 */
 	public Map<Integer, List<? extends HexCoordinates>> getAdjacentHexCoordinates (int range);
 	
+	/**
+	 * Calculate distance between two hexes.  Will be one less than the number
+	 * if items in the path between them.
+	 */
 	public int measureHexDistanceTo (HexCoordinates otherCoord);
 	
+	/**
+	 * Return a list of HexCoordinates that represent the shortest path between
+	 * two HexCoordinates.  The HexCoordinates will be returned in order.
+	 * The first item in the list will be this HexCoordinates and the last item
+	 * in the list will be the target HexCoordinates.
+	 */
 	public List<HexCoordinates> getHexPathTo (HexCoordinates otherCoord);
 	
 }

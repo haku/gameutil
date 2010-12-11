@@ -17,6 +17,7 @@
 package net.sparktank.gameutil.table.hex;
 
 import java.util.Collection;
+import java.util.List;
 
 import net.sparktank.gameutil.table.Cell;
 
@@ -27,6 +28,7 @@ public interface HexCell extends Cell {
 	/**
 	 * Get all the cells surrounding this cell.
 	 * A range of 1 will fetch all cells adjacent to this one.
+	 * The cells may be returned in any order.
 	 */
 	public Collection<? extends HexCell> getAdjacentHexCells (int range);
 	
@@ -34,6 +36,11 @@ public interface HexCell extends Cell {
 	 * Calculate the number of moves needed to travel from this cell to another cell.
 	 */
 	public int measureHexDistanceTo (HexCell otherCell);
+	
+	/**
+	 * See HexCoordinates.getHexPathTo().
+	 */
+	public List<? extends HexCell> getHexPathTo (HexCell otherCell);
 	
 	public Collection<? extends HexPiece> getHexPieces ();
 	

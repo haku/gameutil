@@ -64,7 +64,7 @@ public class HexTableImpl implements HexTable {
 	}
 	
 	@Override
-	public Collection<? extends HexCell> getHexCells(Collection<? extends HexCoordinates> coordinates) {
+	public List<? extends HexCell> getHexCells(List<? extends HexCoordinates> coordinates) {
 		List<HexCell> ret = new LinkedList<HexCell>();
 		for (HexCoordinates coord : coordinates) {
 			HexCell cell = getHexCell(coord);

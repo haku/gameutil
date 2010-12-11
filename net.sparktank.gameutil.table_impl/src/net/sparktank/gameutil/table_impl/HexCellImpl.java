@@ -56,7 +56,7 @@ public class HexCellImpl implements HexCell {
 		Map<Integer, List<? extends HexCoordinates>> adjCoords = this.coordinates.getAdjacentHexCoordinates(range);
 		
 		// Collapse down the collections of coordinates at each range.
-		Collection<HexCoordinates> coords = new LinkedList<HexCoordinates>();
+		List<HexCoordinates> coords = new LinkedList<HexCoordinates>();
 		for (List<? extends HexCoordinates> coordListAtRange : adjCoords.values()) {
 			coords.addAll(coordListAtRange);
 		}
@@ -67,7 +67,14 @@ public class HexCellImpl implements HexCell {
 	
 	@Override
 	public int measureHexDistanceTo (HexCell otherCell) {
-		throw new RuntimeException("Not implemented.");
+		return this.getHexCoordinates().measureHexDistanceTo(otherCell.getHexCoordinates());
+	}
+	
+	@Override
+	public List<? extends HexCell> getHexPathTo(HexCell otherCell) {
+		List<HexCoordinates> path = this.getHexCoordinates().getHexPathTo(otherCell.getHexCoordinates());
+		List<? extends HexCell> pathCells = this.parent.getHexCells(path);
+		return pathCells;
 	}
 	
 	@Override
