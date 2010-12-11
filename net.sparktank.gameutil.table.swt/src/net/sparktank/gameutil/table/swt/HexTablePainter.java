@@ -16,11 +16,16 @@
 
 package net.sparktank.gameutil.table.swt;
 
+import net.sparktank.gameutil.table.hex.HexBearing;
+import net.sparktank.gameutil.table.hex.HexCell;
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexTable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
@@ -40,16 +45,47 @@ public class HexTablePainter implements PaintListener {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	private static final int CELLSIZE = 30; // px.
+	private static final int HALFCELLSIZE = CELLSIZE / 2;
+	
 	@Override
 	public void paintControl(PaintEvent e) {
 		Rectangle clientArea = this.canvas.getClientArea();
 		
-		/*
-		 * TODO actually draw table here.
-		 */
+		FontData fontData = e.gc.getFont().getFontData()[0];
+		Font font = new Font(e.gc.getDevice(), fontData.getName(),
+				CELLSIZE / 4, fontData.getStyle());
+		e.gc.setFont(font);
 		
-		Point centre = new Point(clientArea.width/2, clientArea.height/2);
-		drawTextHVCen(e, centre.x, centre.y, this.hexTable.toString());
+		HexCell rowStart = this.hexTable.getHexCell(0, 0); // The top-left most cell to draw.
+		HexCell cell = rowStart;
+		int rowNumber = 0;
+		int leftIndent = 0;
+		while (true) {
+			HexCoordinates coord = cell.getHexCoordinates();
+			int x = HALFCELLSIZE + (coord.getX() + (rowNumber / 2)) * CELLSIZE + leftIndent;
+			int y = (int) ((HALFCELLSIZE + coord.getY() * CELLSIZE) * 0.866);
+			Rectangle rect = new Rectangle(x, y, CELLSIZE, CELLSIZE);
+			
+			String s = coord.getX() + "," + coord.getY();
+			drawTextHVCen(e, rect.x + HALFCELLSIZE, rect.y + HALFCELLSIZE, s);
+			e.gc.drawOval(rect.x, rect.y, CELLSIZE, CELLSIZE);
+			
+			if (rect.y + rect.height > clientArea.height) break;
+			
+			cell = this.hexTable.getHexCell(coord.getX() + HexBearing.EAST.getDx(), coord.getY() + HexBearing.EAST.getDy());
+			if (cell == null || rect.x + rect.width > clientArea.width) {
+				HexBearing bearing = rowNumber % 2 == 0 ? HexBearing.SOUTHEAST : HexBearing.SOUTHWEST;
+				cell = this.hexTable.getHexCell(rowStart.getCoordinates().getX() + bearing.getDx(),
+						rowStart.getCoordinates().getY() + bearing.getDy());
+				rowStart = cell;
+				rowNumber++;
+				leftIndent = (rowNumber % 2) * HALFCELLSIZE;
+			}
+			if (cell == null) break;
+		}
+		
+		font.dispose();
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
