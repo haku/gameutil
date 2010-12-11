@@ -110,6 +110,32 @@ public class HexCoordinatesImpl implements HexCoordinates {
 		return coordMap;
 	};
 	
+	@Override
+	public int measureHexDistanceTo (HexCoordinates otherCoord) {
+		List<HexCoordinates> path = new LinkedList<HexCoordinates>();
+		path.add(this);
+		
+		int tx = otherCoord.getX();
+		int ty = otherCoord.getY();
+		
+		HexCoordinates c = this;
+		while (true) {
+			int cx = c.getX();
+			int cy = c.getY();
+			
+			if (cx < tx) cx++; else if (cx > tx) cx--;
+			if (cy < ty) cy++; else if (cy > ty) cy--;
+			
+			HexCoordinates nextCoord = new HexCoordinatesImpl(cx, cy);
+			path.add(nextCoord);
+			c = nextCoord;
+			
+			if (c.equals(otherCoord)) break;
+		}
+		
+		return path.size();
+	}
+	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Coordinates methods.
 	

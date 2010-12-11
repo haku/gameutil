@@ -14,7 +14,7 @@ public class TestHexCoordinates {
 	
 	@Test
 	public void testGetAdjacentHexCoordinates () {
-		HexCoordinatesImpl coord = new HexCoordinatesImpl(1, 1);
+		HexCoordinates coord = new HexCoordinatesImpl(1, 1);
 		
 		List<? extends HexCoordinates> adjacentHexCoordinates = coord.getAdjacentHexCoordinates();
 		for (HexCoordinates adjCoord : adjacentHexCoordinates) {
@@ -26,7 +26,7 @@ public class TestHexCoordinates {
 	
 	@Test
 	public void testGetAdjacentHexCoordinatesRange1 () {
-		HexCoordinatesImpl coord = new HexCoordinatesImpl(1, 1);
+		HexCoordinates coord = new HexCoordinatesImpl(1, 1);
 		
 		Map<Integer, List<? extends HexCoordinates>> adjacentHexCoordinates = coord.getAdjacentHexCoordinates(60);
 		for (Entry<Integer, List<? extends HexCoordinates>> adjCoords : adjacentHexCoordinates.entrySet()) {
@@ -40,6 +40,17 @@ public class TestHexCoordinates {
 			}
 			System.out.println();
 		}
+	}
+	
+	@Test
+	public void testMeasureHexRange () {
+		HexCoordinates startCoord = new HexCoordinatesImpl(3, 2);
+		HexCoordinates endCoord = new HexCoordinatesImpl(0, 3);
+		
+		int dist = startCoord.measureHexDistanceTo(endCoord);
+		
+		if (dist != 4) throw new RuntimeException();
+		
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

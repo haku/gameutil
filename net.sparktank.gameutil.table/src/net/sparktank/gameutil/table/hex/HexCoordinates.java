@@ -34,4 +34,6 @@ public interface HexCoordinates extends Coordinates {
 	 */
 	public Map<Integer, List<? extends HexCoordinates>> getAdjacentHexCoordinates (int range);
 	
+	public int measureHexDistanceTo (HexCoordinates otherCoord);
+	
 }
