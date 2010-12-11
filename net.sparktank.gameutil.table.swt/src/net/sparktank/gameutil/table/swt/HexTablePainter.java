@@ -53,18 +53,18 @@ public class HexTablePainter implements PaintListener {
 		Rectangle clientArea = this.canvas.getClientArea();
 		
 		FontData fontData = e.gc.getFont().getFontData()[0];
-		Font font = new Font(e.gc.getDevice(), fontData.getName(),
-				CELLSIZE / 4, fontData.getStyle());
+		Font font = new Font(e.gc.getDevice(), fontData.getName(), CELLSIZE / 4, fontData.getStyle());
 		e.gc.setFont(font);
 		
-		HexCell rowStart = this.hexTable.getHexCell(0, 0); // The top-left most cell to draw.
-		HexCell cell = rowStart;
-		int rowNumber = 0;
-		int leftIndent = 0;
+		HexCell firstCell = this.hexTable.getHexCell(0, 0); // The top-left most cell to draw.
+		HexCell rowStart = firstCell; // The first cell of this row.
+		HexCell cell = rowStart; // The cell we are currently drawing.
+		int rowNumber = 0; // The row we are drawing, where 0 is at the top of the screen.
+		int leftIndent = 0; // How much to indent the current row (either 0 or HALFCELLSIZE).
 		while (true) {
 			HexCoordinates coord = cell.getHexCoordinates();
-			int x = HALFCELLSIZE + (coord.getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * CELLSIZE + leftIndent;
-			int y = (int) ((HALFCELLSIZE + coord.getY() * CELLSIZE) * 0.866);
+			int x = (coord.getX() - firstCell.getCoordinates().getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * CELLSIZE + leftIndent;
+			int y = (int) (((coord.getY() - firstCell.getCoordinates().getY()) * CELLSIZE) * 0.866);
 			Rectangle rect = new Rectangle(x, y, CELLSIZE, CELLSIZE);
 			
 			String s = coord.getX() + "," + coord.getY();
