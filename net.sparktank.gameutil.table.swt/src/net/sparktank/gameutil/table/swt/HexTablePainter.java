@@ -63,7 +63,7 @@ public class HexTablePainter implements PaintListener {
 		int leftIndent = 0;
 		while (true) {
 			HexCoordinates coord = cell.getHexCoordinates();
-			int x = HALFCELLSIZE + (coord.getX() + (rowNumber / 2)) * CELLSIZE + leftIndent;
+			int x = HALFCELLSIZE + (coord.getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * CELLSIZE + leftIndent;
 			int y = (int) ((HALFCELLSIZE + coord.getY() * CELLSIZE) * 0.866);
 			Rectangle rect = new Rectangle(x, y, CELLSIZE, CELLSIZE);
 			
