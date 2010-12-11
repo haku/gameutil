@@ -19,6 +19,7 @@ package net.sparktank.gameutil.table;
 import java.util.Collection;
 
 public interface Cell {
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public Coordinates getCoordinates ();
 	
@@ -28,4 +29,5 @@ public interface Cell {
 	
 	public Collection<? extends Piece> getPieces ();
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

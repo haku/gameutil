@@ -21,9 +21,14 @@ import java.util.Map;
 
 public interface Coordinates {
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	public int getX ();
 	public int getY ();
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	public Map<Integer, ? extends Collection<? extends Coordinates>> getAdjacentCoordinates (int range);
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

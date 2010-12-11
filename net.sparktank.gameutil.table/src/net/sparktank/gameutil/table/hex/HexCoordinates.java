@@ -22,6 +22,7 @@ import java.util.Map;
 import net.sparktank.gameutil.table.Coordinates;
 
 public interface HexCoordinates extends Coordinates {
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	/**
 	 * All immediately adjacent coordinates.
@@ -48,4 +49,5 @@ public interface HexCoordinates extends Coordinates {
 	 */
 	public List<HexCoordinates> getHexPathTo (HexCoordinates otherCoord);
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

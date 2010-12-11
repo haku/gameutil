@@ -22,8 +22,11 @@ import java.util.List;
 import net.sparktank.gameutil.table.Cell;
 
 public interface HexCell extends Cell {
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public HexCoordinates getHexCoordinates ();
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	/**
 	 * Get all the cells surrounding this cell.
@@ -42,6 +45,9 @@ public interface HexCell extends Cell {
 	 */
 	public List<? extends HexCell> getHexPathTo (HexCell otherCell);
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	public Collection<? extends HexPiece> getHexPieces ();
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

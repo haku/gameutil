@@ -30,6 +30,7 @@ import net.sparktank.gameutil.table.Table;
  * 
  */
 public interface HexTable extends Table {
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	/**
 	 * Returns all the cells on the table.
@@ -48,6 +49,9 @@ public interface HexTable extends Table {
 	 */
 	public HexCell getHexCell (HexCoordinates coordinates);
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	public Collection<? extends HexPiece> getHexPieces ();
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

@@ -19,6 +19,7 @@ package net.sparktank.gameutil.table;
 import java.util.Collection;
 
 public interface Table {
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public Collection<? extends Cell> getCells ();
 	public Collection<? extends Piece> getPieces ();
@@ -27,4 +28,5 @@ public interface Table {
 	public Collection<? extends CellAnnotation> getCellAnnotations ();
 	public Collection<? extends PieceAnnotation> getPieceAnnotations ();
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }
