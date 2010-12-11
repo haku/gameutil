@@ -71,10 +71,10 @@ public class HexTablePainter implements PaintListener {
 			drawTextHVCen(e, rect.x + HALFCELLSIZE, rect.y + HALFCELLSIZE, s);
 			e.gc.drawOval(rect.x, rect.y, CELLSIZE, CELLSIZE);
 			
-			if (rect.y + rect.height > clientArea.height) break;
-			
 			cell = this.hexTable.getHexCell(coord.getX() + HexBearing.EAST.getDx(), coord.getY() + HexBearing.EAST.getDy());
 			if (cell == null || rect.x + rect.width > clientArea.width) {
+				if (rect.y + rect.height > clientArea.height) break;
+				
 				HexBearing bearing = rowNumber % 2 == 0 ? HexBearing.SOUTHEAST : HexBearing.SOUTHWEST;
 				cell = this.hexTable.getHexCell(rowStart.getCoordinates().getX() + bearing.getDx(),
 						rowStart.getCoordinates().getY() + bearing.getDy());
