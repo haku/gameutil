@@ -36,4 +36,6 @@ public interface HexCoordinates extends Coordinates {
 	
 	public int measureHexDistanceTo (HexCoordinates otherCoord);
 	
+	public List<HexCoordinates> getHexPathTo (HexCoordinates otherCoord);
+	
 }

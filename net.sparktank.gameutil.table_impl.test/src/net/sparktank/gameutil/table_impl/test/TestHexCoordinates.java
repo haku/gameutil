@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import junit.framework.Assert;
+
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table_impl.HexCoordinatesImpl;
 
@@ -49,8 +51,20 @@ public class TestHexCoordinates {
 		
 		int dist = startCoord.measureHexDistanceTo(endCoord);
 		
-		if (dist != 4) throw new RuntimeException();
+		if (dist != 3) throw new RuntimeException(dist + " != 3");
+	}
+	
+	@Test
+	public void testGetHexPath () {
+		HexCoordinates startCoord = new HexCoordinatesImpl(3, 2);
+		HexCoordinates endCoord = new HexCoordinatesImpl(0, 3);
 		
+		List<HexCoordinates> path = startCoord.getHexPathTo(endCoord);
+		
+		Assert.assertEquals(path.get(0), new HexCoordinatesImpl(3, 2));
+		Assert.assertEquals(path.get(1), new HexCoordinatesImpl(2, 3));
+		Assert.assertEquals(path.get(2), new HexCoordinatesImpl(1, 3));
+		Assert.assertEquals(path.get(3), new HexCoordinatesImpl(0, 3));
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

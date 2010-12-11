@@ -112,6 +112,28 @@ public class HexCoordinatesImpl implements HexCoordinates {
 	
 	@Override
 	public int measureHexDistanceTo (HexCoordinates otherCoord) {
+		int dist = 0;
+		
+		int cx = this.getX();
+		int cy = this.getY();
+		
+		int tx = otherCoord.getX();
+		int ty = otherCoord.getY();
+		
+		while (true) {
+			if (cx == tx && cy == ty) break;
+			
+			dist++;
+			
+			if (cx < tx) cx++; else if (cx > tx) cx--;
+			if (cy < ty) cy++; else if (cy > ty) cy--;
+		}
+		
+		return dist;
+	}
+	
+	@Override
+	public List<HexCoordinates> getHexPathTo(HexCoordinates otherCoord) {
 		List<HexCoordinates> path = new LinkedList<HexCoordinates>();
 		path.add(this);
 		
@@ -120,6 +142,8 @@ public class HexCoordinatesImpl implements HexCoordinates {
 		
 		HexCoordinates c = this;
 		while (true) {
+			if (c.equals(otherCoord)) break;
+			
 			int cx = c.getX();
 			int cy = c.getY();
 			
@@ -129,11 +153,9 @@ public class HexCoordinatesImpl implements HexCoordinates {
 			HexCoordinates nextCoord = new HexCoordinatesImpl(cx, cy);
 			path.add(nextCoord);
 			c = nextCoord;
-			
-			if (c.equals(otherCoord)) break;
 		}
 		
-		return path.size();
+		return path;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
