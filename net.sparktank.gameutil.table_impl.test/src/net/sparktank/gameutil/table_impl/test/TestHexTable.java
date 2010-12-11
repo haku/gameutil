@@ -55,6 +55,20 @@ public class TestHexTable {
 		// TODO do a better test here.
 	}
 	
+	@Test
+	public void testHexTableBig () {
+		HexTable hexTable = new HexTableImpl(500, 500);
+		HexCell cell = hexTable.getHexCell(new HexCoordinatesImpl(250,250));
+		cell.getAdjacentCells(100);
+	}
+	
+	@Test
+	public void testHexTableHuge () {
+		HexTable hexTable = new HexTableImpl(2000, 2000);
+		HexCell cell = hexTable.getHexCell(new HexCoordinatesImpl(500,500));
+		cell.getAdjacentCells(100);
+	}
+	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public void testHexTableHasCell (HexTable table, int x, int y, boolean expected) {
