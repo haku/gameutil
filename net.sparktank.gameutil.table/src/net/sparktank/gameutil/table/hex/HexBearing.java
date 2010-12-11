@@ -25,12 +25,12 @@ public enum HexBearing {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	// 6 arbitrary directions.
-	B0( 1, -1),
-	B1( 1,  0),
-	B2( 0,  1),
-	B3(-1,  1),
-	B4(-1,  0),
-	B5( 0, -1);
+	NORTHEAST( 1, -1),
+	EAST( 1,  0),
+	SOUTHEAST( 0,  1),
+	SOUTHWEST(-1,  1),
+	WEST(-1,  0),
+	NORTHWEST( 0, -1);
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
