@@ -20,7 +20,6 @@ import java.util.Collection;
 
 import net.sparktank.gameutil.table.hex.HexCell;
 import net.sparktank.gameutil.table.hex.HexTable;
-import net.sparktank.gameutil.table_impl.HexCoordinatesImpl;
 import net.sparktank.gameutil.table_impl.HexTableImpl;
 
 import org.junit.Test;
@@ -47,7 +46,7 @@ public class TestHexTable {
 	public void testHexTableGetCells () {
 		HexTable hexTable = new HexTableImpl(100, 100);
 		
-		HexCell hexCell = hexTable.getHexCell(new HexCoordinatesImpl(50, 50)); // TODO remove need to create HexCoordinatesImpl
+		HexCell hexCell = hexTable.getHexCell(50, 50);
 		Collection<? extends HexCell> adjacentHexCells = hexCell.getAdjacentHexCells(10);
 		
 		if (adjacentHexCells.size() != 331) throw new RuntimeException();
@@ -58,29 +57,35 @@ public class TestHexTable {
 	@Test
 	public void testHexTableBig () {
 		HexTable hexTable = new HexTableImpl(500, 500);
-		HexCell cell = hexTable.getHexCell(new HexCoordinatesImpl(250,250));
+		HexCell cell = hexTable.getHexCell(250,250);
 		cell.getAdjacentCells(100);
 	}
 	
 	@Test
 	public void testHexTableHuge () {
 		HexTable hexTable = new HexTableImpl(2000, 2000);
-		HexCell cell = hexTable.getHexCell(new HexCoordinatesImpl(500,500));
+		HexCell cell = hexTable.getHexCell(500,500);
 		cell.getAdjacentCells(100);
+	}
+	
+	@Test
+	public void testHexTableUber () {
+		HexTable hexTable = new HexTableImpl(5000, 5000);
+		HexCell cell = hexTable.getHexCell(500,500);
+		cell.getAdjacentCells(200);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public void testHexTableHasCell (HexTable table, int x, int y, boolean expected) {
 		
-		HexCoordinatesImpl coord = new HexCoordinatesImpl(x, y);
-		HexCell cell = table.getHexCell(coord);
+		HexCell cell = table.getHexCell(x, y);
 		
 		if (cell == null && expected) {
-			throw new RuntimeException("Expected cell not found: " + coord);
+			throw new RuntimeException("Expected cell not found: " + x + "," + y);
 		}
 		else if (cell != null && !expected) {
-			throw new RuntimeException("Unexpected cell found: " + coord);
+			throw new RuntimeException("Unexpected cell found: " + x + "," + y);
 		}
 	}
 	

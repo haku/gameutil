@@ -44,7 +44,7 @@ public class HexCoordinatesImpl implements HexCoordinates {
 		 * we can cache the hash code.
 		 * Calculate in constructor to be thread-safe.
 		 */
-		this.hash = (1 * (31 + this.x)) * 31 + this.y;
+		this.hash = hashCoordinates(this.x, this.y);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -205,6 +205,12 @@ public class HexCoordinatesImpl implements HexCoordinates {
 	@Override
 	public int hashCode() {
 		return this.hash;
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	static public int hashCoordinates (int x, int y) {
+		return (1 * (31 + x)) * 31 + y;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

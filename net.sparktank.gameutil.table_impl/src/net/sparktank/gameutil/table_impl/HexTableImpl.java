@@ -37,7 +37,7 @@ public class HexTableImpl implements HexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Fields.
 	
-	private final Map<HexCoordinatesImpl, HexCellImpl> cellMap;
+	private final Map<Integer, HexCellImpl> cellMap;
     private final int width;
     private final int height;
 	
@@ -75,7 +75,22 @@ public class HexTableImpl implements HexTable {
 	
 	@Override
 	public HexCell getHexCell(HexCoordinates coordinates) {
-		return this.cellMap.get(coordinates);
+		return getHexCell(Integer.valueOf(coordinates.hashCode()));
+	}
+	
+	@Override
+	public HexCell getHexCell(Integer coordinatesHash) {
+		return this.cellMap.get(coordinatesHash);
+	}
+	
+	@Override
+	public HexCell getHexCell(int coordinatesHash) {
+		return getHexCell(Integer.valueOf(coordinatesHash));
+	}
+	
+	@Override
+	public HexCell getHexCell(int x, int y) {
+		return getHexCell(HexCoordinatesImpl.hashCoordinates(x, y));
 	}
 	
 	@Override
@@ -121,8 +136,8 @@ public class HexTableImpl implements HexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	static helper methods.
 	
-	protected Map<HexCoordinatesImpl, HexCellImpl> generateRectHexGrid (HexTable table, int w, int h) {
-		Map<HexCoordinatesImpl,HexCellImpl> map = new HashMap<HexCoordinatesImpl, HexCellImpl>();
+	protected Map<Integer, HexCellImpl> generateRectHexGrid (HexTable table, int w, int h) {
+		Map<Integer, HexCellImpl> map = new HashMap<Integer, HexCellImpl>();
 		
 //		System.err.println("Cells:");
 		
@@ -132,7 +147,7 @@ public class HexTableImpl implements HexTable {
 			for (int x = 0; x < w; x++) {
     			HexCoordinatesImpl coord = new HexCoordinatesImpl(x + x_offset, y);
     			HexCellImpl cell = new HexCellImpl(table, coord);
-    			map.put(coord, cell);
+    			map.put(Integer.valueOf(coord.hashCode()), cell);
     			
 //    			System.err.print(" ");
 //    			System.err.print(coord);
