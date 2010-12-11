@@ -65,12 +65,8 @@ public class HexCoordinatesImpl implements HexCoordinates {
 		if (range < 1) throw new IllegalArgumentException("Range must be 1 or more.");
 		
 		/*
-		 * Return a Collection of HexCoordinatesImpl objects representing
-		 * the surrounding cells.
-		 * 
-		 * NOTE: Worry about the number of HexCoordinatesImpl objects that will be
-		 * created and the recycling of them once this method actually works at all.
-		 * 
+		 * NOTE: At some point we may want to worry about the number of HexCoordinatesImpl
+		 * objects that will be created and the recycling of them...
 		 */
 		
 		// Using this to look up if we already have one is way faster than Collection.contains().

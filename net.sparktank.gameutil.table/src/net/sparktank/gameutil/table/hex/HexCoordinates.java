@@ -29,7 +29,7 @@ public interface HexCoordinates extends Coordinates {
 	public List<? extends HexCoordinates> getAdjacentHexCoordinates ();
 	
 	/**
-	 * 
+	 * Return a Collection of HexCoordinatesImpl objects representing the surrounding cells.
 	 * @return key = range, value = collection of coordinates.
 	 */
 	public Map<Integer, List<? extends HexCoordinates>> getAdjacentHexCoordinates (int range);
