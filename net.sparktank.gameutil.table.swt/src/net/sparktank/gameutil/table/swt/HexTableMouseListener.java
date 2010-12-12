@@ -16,20 +16,18 @@
 
 package net.sparktank.gameutil.table.swt;
 
-import net.sparktank.gameutil.table.hex.HexTable;
-
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 
 public class HexTableMouseListener implements MouseListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	private final HexTable hexTable;
+	private final HexTableConfig config;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public HexTableMouseListener (HexTable hexTable) {
-		this.hexTable = hexTable;
+	public HexTableMouseListener (HexTableConfig config) {
+		this.config = config;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -19,7 +19,6 @@ package net.sparktank.gameutil.table.swt;
 import net.sparktank.gameutil.table.hex.HexBearing;
 import net.sparktank.gameutil.table.hex.HexCell;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
-import net.sparktank.gameutil.table.hex.HexTable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -33,54 +32,54 @@ import org.eclipse.swt.widgets.Canvas;
 public class HexTablePainter implements PaintListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	private final HexTableConfig config;
 	private final Canvas canvas;
-	private final HexTable hexTable;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public HexTablePainter (Canvas canvas, HexTable hexTable) {
+	public HexTablePainter (HexTableConfig config, Canvas canvas) {
+		this.config = config;
 		this.canvas = canvas;
-		this.hexTable = hexTable;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	
-	private static final int CELLSIZE = 30; // px.
-	private static final int HALFCELLSIZE = CELLSIZE / 2;
 	
 	@Override
 	public void paintControl(PaintEvent e) {
 		Rectangle clientArea = this.canvas.getClientArea();
 		
+		int cellSize = this.config.getCellSize();
+		int halfCellSize = cellSize / 2;
+		
 		FontData fontData = e.gc.getFont().getFontData()[0];
-		Font font = new Font(e.gc.getDevice(), fontData.getName(), CELLSIZE / 4, fontData.getStyle());
+		Font font = new Font(e.gc.getDevice(), fontData.getName(), cellSize / 4, fontData.getStyle());
 		e.gc.setFont(font);
 		
-		HexCell firstCell = this.hexTable.getHexCell(0, 0); // The top-left most cell to draw.
+		HexCell firstCell = this.config.getTopLeftCell(); // The top-left most cell to draw.
 		HexCell rowStart = firstCell; // The first cell of this row.
 		HexCell cell = rowStart; // The cell we are currently drawing.
 		int rowNumber = 0; // The row we are drawing, where 0 is at the top of the screen.
 		int leftIndent = 0; // How much to indent the current row (either 0 or HALFCELLSIZE).
 		while (true) {
 			HexCoordinates coord = cell.getHexCoordinates();
-			int x = (coord.getX() - firstCell.getCoordinates().getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * CELLSIZE + leftIndent;
-			int y = (int) (((coord.getY() - firstCell.getCoordinates().getY()) * CELLSIZE) * 0.866);
-			Rectangle rect = new Rectangle(x, y, CELLSIZE, CELLSIZE);
+			int x = (coord.getX() - firstCell.getCoordinates().getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * cellSize + leftIndent;
+			int y = (int) (((coord.getY() - firstCell.getCoordinates().getY()) * cellSize) * 0.866);
+			Rectangle rect = new Rectangle(x, y, cellSize, cellSize);
 			
 			String s = coord.getX() + "," + coord.getY();
-			drawTextHVCen(e, rect.x + HALFCELLSIZE, rect.y + HALFCELLSIZE, s);
-			e.gc.drawOval(rect.x, rect.y, CELLSIZE, CELLSIZE);
+			drawTextHVCen(e, rect.x + halfCellSize, rect.y + halfCellSize, s);
+			e.gc.drawOval(rect.x, rect.y, cellSize, cellSize);
 			
-			cell = this.hexTable.getHexCell(coord.getX() + HexBearing.EAST.getDx(), coord.getY() + HexBearing.EAST.getDy());
+			cell = this.config.getHexTable().getHexCell(coord.getX() + HexBearing.EAST.getDx(), coord.getY() + HexBearing.EAST.getDy());
 			if (cell == null || rect.x + rect.width > clientArea.width) {
 				if (rect.y + rect.height > clientArea.height) break;
 				
 				HexBearing bearing = rowNumber % 2 == 0 ? HexBearing.SOUTHEAST : HexBearing.SOUTHWEST;
-				cell = this.hexTable.getHexCell(rowStart.getCoordinates().getX() + bearing.getDx(),
+				cell = this.config.getHexTable().getHexCell(rowStart.getCoordinates().getX() + bearing.getDx(),
 						rowStart.getCoordinates().getY() + bearing.getDy());
 				rowStart = cell;
 				rowNumber++;
-				leftIndent = (rowNumber % 2) * HALFCELLSIZE;
+				leftIndent = (rowNumber % 2) * halfCellSize;
 			}
 			if (cell == null) break;
 		}
@@ -90,12 +89,12 @@ public class HexTablePainter implements PaintListener {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	static private Rectangle drawTextHCen (PaintEvent e, int x, int top, String text) {
-		Point textSize = e.gc.textExtent(text);
-		int _left = x - (textSize.x / 2);
-		e.gc.drawText(text, _left, top, SWT.TRANSPARENT);
-		return new Rectangle(_left, top, textSize.x, textSize.y);
-	}
+//	static private Rectangle drawTextHCen (PaintEvent e, int x, int top, String text) {
+//		Point textSize = e.gc.textExtent(text);
+//		int _left = x - (textSize.x / 2);
+//		e.gc.drawText(text, _left, top, SWT.TRANSPARENT);
+//		return new Rectangle(_left, top, textSize.x, textSize.y);
+//	}
 	
 	static private Rectangle drawTextHVCen (PaintEvent e, int x, int y, String... text) {
 		Rectangle ret = new Rectangle(x, y, 0, 0);

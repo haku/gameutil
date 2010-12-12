@@ -17,6 +17,8 @@
 package net.sparktank.gameutil.table.swt.test;
 
 import net.sparktank.gameutil.table.hex.HexTable;
+import net.sparktank.gameutil.table.swt.HexTableConfig;
+import net.sparktank.gameutil.table.swt.HexTableMouseListener;
 import net.sparktank.gameutil.table.swt.HexTablePainter;
 import net.sparktank.gameutil.table_impl.HexTableImpl;
 
@@ -42,10 +44,13 @@ public class BasicHexTable {
 		shell.setLayout(new FillLayout());
 		
 		HexTable table = new HexTableImpl(20, 20);
+		HexTableConfig config = new HexTableConfig(table, table.getHexCell(0, 0));
 		
 		Canvas canvas = new Canvas(shell, SWT.NONE);
-		HexTablePainter painter = new HexTablePainter(canvas, table);
+		HexTablePainter painter = new HexTablePainter(config, canvas);
+		HexTableMouseListener mouseListener = new HexTableMouseListener(config);
 		canvas.addPaintListener(painter);
+		canvas.addMouseListener(mouseListener);
 		
 		shell.open ();
 		while (!shell.isDisposed ()) {
