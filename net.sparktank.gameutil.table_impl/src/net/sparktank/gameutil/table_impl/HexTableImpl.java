@@ -18,10 +18,11 @@ package net.sparktank.gameutil.table_impl;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import net.sparktank.gameutil.table.Annotation;
 import net.sparktank.gameutil.table.Cell;
@@ -37,7 +38,7 @@ public class HexTableImpl implements HexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Fields.
 	
-	private final Map<Integer, HexCellImpl> cellMap;
+	private final Map<Long, HexCellImpl> cellMap;
     private final int width;
     private final int height;
 	
@@ -75,22 +76,12 @@ public class HexTableImpl implements HexTable {
 	
 	@Override
 	public HexCell getHexCell(HexCoordinates coordinates) {
-		return getHexCell(Integer.valueOf(coordinates.hashCode()));
-	}
-	
-	@Override
-	public HexCell getHexCell(Integer coordinatesHash) {
-		return this.cellMap.get(coordinatesHash);
-	}
-	
-	@Override
-	public HexCell getHexCell(int coordinatesHash) {
-		return getHexCell(Integer.valueOf(coordinatesHash));
+		return getHexCell(coordinates.getX(), coordinates.getY());
 	}
 	
 	@Override
 	public HexCell getHexCell(int x, int y) {
-		return getHexCell(HexCoordinatesImpl.hashCoordinates(x, y));
+		return this.cellMap.get(Long.valueOf(HexCoordinatesImpl.longHashCoordinates(x, y)));
 	}
 	
 	@Override
@@ -136,8 +127,8 @@ public class HexTableImpl implements HexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	static helper methods.
 	
-	protected Map<Integer, HexCellImpl> generateRectHexGrid (HexTable table, int w, int h) {
-		Map<Integer, HexCellImpl> map = new HashMap<Integer, HexCellImpl>();
+	protected Map<Long, HexCellImpl> generateRectHexGrid (HexTable table, int w, int h) {
+		ConcurrentMap<Long, HexCellImpl> map = new ConcurrentHashMap<Long, HexCellImpl>();
 		
 //		System.err.println("Cells:");
 		
@@ -147,7 +138,10 @@ public class HexTableImpl implements HexTable {
 			for (int x = 0; x < w; x++) {
     			HexCoordinatesImpl coord = new HexCoordinatesImpl(x + x_offset, y);
     			HexCellImpl cell = new HexCellImpl(table, coord);
-    			map.put(Integer.valueOf(coord.hashCode()), cell);
+    			HexCellImpl r = map.putIfAbsent(Long.valueOf(HexCoordinatesImpl.longHashCoordinates(x + x_offset, y)), cell);
+				if (r != null) throw new RuntimeException("Hash collision.  The hash for "
+							+ r.getCoordinates().getX() + "," + r.getCoordinates().getY()
+							+ " = the hash for " + coord.getX() + "," + coord.getY() + ".");
     			
 //    			System.err.print(" ");
 //    			System.err.print(coord);

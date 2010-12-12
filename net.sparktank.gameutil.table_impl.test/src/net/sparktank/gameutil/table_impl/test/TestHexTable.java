@@ -62,17 +62,24 @@ public class TestHexTable {
 	}
 	
 	@Test
+	public void testHexTableVeryBig () {
+		HexTable hexTable = new HexTableImpl(1000, 1000);
+		HexCell cell = hexTable.getHexCell(250,250);
+		cell.getAdjacentCells(100);
+	}
+	
+	@Test
 	public void testHexTableHuge () {
-		HexTable hexTable = new HexTableImpl(2000, 2000);
-		HexCell cell = hexTable.getHexCell(500,500);
+		HexTable hexTable = new HexTableImpl(1500, 1500);
+		HexCell cell = hexTable.getHexCell(250,250);
 		cell.getAdjacentCells(100);
 	}
 	
 	@Test
 	public void testHexTableUber () {
-		HexTable hexTable = new HexTableImpl(5000, 5000);
-		HexCell cell = hexTable.getHexCell(500,500);
-		cell.getAdjacentCells(200);
+		HexTable hexTable = new HexTableImpl(2000, 2000);
+		HexCell cell = hexTable.getHexCell(250,250);
+		cell.getAdjacentCells(100);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

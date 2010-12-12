@@ -209,6 +209,10 @@ public class HexCoordinatesImpl implements HexCoordinates {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	static public long longHashCoordinates (int x, int y) {
+		return x<<16 | y;
+	}
+	
 	static public int hashCoordinates (int x, int y) {
 		return (1 * (31 + x)) * 31 + y;
 	}

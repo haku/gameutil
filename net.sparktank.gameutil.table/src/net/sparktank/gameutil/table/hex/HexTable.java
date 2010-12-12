@@ -48,8 +48,6 @@ public interface HexTable extends Table {
 	 * Fetch a specific cell based on its coordinates.
 	 */
 	public HexCell getHexCell (HexCoordinates coordinates);
-	public HexCell getHexCell (Integer coordinatesHash);
-	public HexCell getHexCell (int coordinatesHash);
 	public HexCell getHexCell (int x, int y);
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
