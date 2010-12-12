@@ -16,6 +16,8 @@
 
 package net.sparktank.gameutil.table.swt;
 
+import net.sparktank.gameutil.table.hex.HexCell;
+
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 
@@ -34,21 +36,30 @@ public class HexTableMouseListener implements MouseListener {
 //	MouseListener methods.
 	
 	@Override
-	public void mouseDoubleClick(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
 	public void mouseDown(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		HexCell cell = getCellFromXY(e.x, e.y);
+		System.out.println("mouseDown=" + cell);
 	}
 	
 	@Override
 	public void mouseUp(MouseEvent e) {
-		// TODO Auto-generated method stub
+//		HexCell cell = getCellFromXY(e.x, e.y);
+//		System.out.println("mouseUp=" + cell);
+	}
+	
+	@Override
+	public void mouseDoubleClick(MouseEvent e) {
+//		HexCell cell = getCellFromXY(e.x, e.y);
+//		System.out.println("mouseDoubleClick=" + cell);
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	protected HexCell getCellFromXY (int x, int y) {
 		
+		
+		
+		return null;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
