@@ -32,6 +32,10 @@ import org.eclipse.swt.widgets.Canvas;
 public class HexTablePainter implements PaintListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	private static final double HEXPITCH = 0.866; // sqrt(0.75)
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	private final HexTableConfig config;
 	private final Canvas canvas;
 	
@@ -63,7 +67,7 @@ public class HexTablePainter implements PaintListener {
 		while (true) {
 			HexCoordinates coord = cell.getHexCoordinates();
 			int x = (coord.getX() - firstCell.getCoordinates().getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * cellSize + leftIndent;
-			int y = (int) (((coord.getY() - firstCell.getCoordinates().getY()) * cellSize) * 0.866);
+			int y = (int) (((coord.getY() - firstCell.getCoordinates().getY()) * cellSize) * HEXPITCH);
 			Rectangle rect = new Rectangle(x, y, cellSize, cellSize);
 			
 			String s = coord.getX() + "," + coord.getY();
