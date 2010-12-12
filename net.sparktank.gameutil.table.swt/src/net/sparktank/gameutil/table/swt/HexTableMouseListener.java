@@ -37,8 +37,11 @@ public class HexTableMouseListener implements MouseListener {
 	
 	@Override
 	public void mouseDown(MouseEvent e) {
-		HexCell cell = getCellFromXY(e.x, e.y);
-		System.out.println("mouseDown=" + cell);
+		HexTableEventListener eventListener = this.config.getEventListener();
+		if (eventListener != null) {
+			HexCell cell = getCellFromXY(e.x, e.y);
+			eventListener.cellClicked(cell);
+		}
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ public class HexTableConfig {
 	
 	private HexCell topLeftCell = null;
 	private int cellSize = DEFAULTCELLSIZE;
+	private HexTableEventListener eventListener = null;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
@@ -40,6 +41,14 @@ public class HexTableConfig {
 	}
 	public HexCell getTopLeftCell() {
 		return this.topLeftCell;
+	}
+	
+	public void setEventListener(HexTableEventListener eventListener) {
+		this.eventListener = eventListener;
+	}
+	
+	public HexTableEventListener getEventListener() {
+		return this.eventListener;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
