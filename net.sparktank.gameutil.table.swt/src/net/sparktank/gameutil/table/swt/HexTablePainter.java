@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Canvas;
 public class HexTablePainter implements PaintListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	private static final double HEXPITCH = 0.866; // sqrt(0.75)
+	public static final double HEXPITCH = 0.866; // sqrt(0.75)
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
