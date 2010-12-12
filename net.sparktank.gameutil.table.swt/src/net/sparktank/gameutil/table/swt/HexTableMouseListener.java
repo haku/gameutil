@@ -56,10 +56,22 @@ public class HexTableMouseListener implements MouseListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	protected HexCell getCellFromXY (int x, int y) {
+		HexCell topLeftCell = this.config.getTopLeftCell();
+		int cellSize = this.config.getCellSize();
+		int halfCellSize = cellSize / 2;
 		
+		int visibleCellY = (int) (y / (cellSize * HexTablePainter.HEXPITCH));
 		
+		int rowIndent = (visibleCellY % 2) * halfCellSize; // 0 of halfCellSize.
+		int rowOffset = visibleCellY / 2; //The number of cells x is shifted by.  Increases by 1 for every 2 rows down.
+		int visibleCellX = (x - rowIndent) / cellSize - rowOffset;
 		
-		return null;
+		int cellY = topLeftCell.getCoordinates().getY() + visibleCellY;
+		int cellX = topLeftCell.getCoordinates().getX() + visibleCellX;
+		
+		HexCell cell = this.config.getHexTable().getHexCell(cellX, cellY);
+		
+		return cell;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
