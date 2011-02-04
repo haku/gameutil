@@ -16,9 +16,10 @@
 
 package net.sparktank.gameutil.table.swt.test;
 
+import java.util.Collection;
+
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
-import net.sparktank.gameutil.table.hex.HexTable;
 import net.sparktank.gameutil.table.swt.HexPiecePainter;
 import net.sparktank.gameutil.table.swt.HexTableConfig;
 import net.sparktank.gameutil.table.swt.HexTableEventListener;
@@ -40,36 +41,42 @@ import org.eclipse.swt.widgets.Shell;
  *
  * @author haku
  */
-public class BasicHexTable {
+public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public static void main(String[] args) {
+		BasicHexTable a = new BasicHexTable();
+		a.run();
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	private final HexTableConfig config;
+	
+	public BasicHexTable () {
+		// Create table.
+		HexTableImpl table = new HexTableImpl(20, 20);
+		this.config = new HexTableConfig(table, table.getHexCoordinates(0, 0));
+		this.config.setEventListener(this);
+		
+		// Add test objects.
+		this.config.getHexTable().addHexPiece(new Mecha(this.config.getHexTable().getHexCoordinates(3, 3), "Alpha"));
+		this.config.getHexTable().addHexPiece(new Mecha(this.config.getHexTable().getHexCoordinates(2, 5), "Beta"));
+	}
+	
+	private void run() {
 		Display display = new Display ();
 		Shell shell = new Shell (display);
 		shell.setText ("HexTable Test");
 		shell.setSize (800, 800);
 		shell.setLayout(new FillLayout());
 		
-		// Create table.
-		HexTable table = new HexTableImpl(20, 20);
-		HexTableConfig config = new HexTableConfig(table, table.getHexCoordinates(0, 0));
-		config.setEventListener(eventListener);
-		
 		// Setup GUI.
 		Canvas canvas = new Canvas(shell, SWT.NONE);
-		HexTablePainter painter = new HexTablePainter(config, canvas, piecePainter);
-		HexTableMouseListener mouseListener = new HexTableMouseListener(config);
+		HexTablePainter painter = new HexTablePainter(this.config, canvas, this);
+		HexTableMouseListener mouseListener = new HexTableMouseListener(this.config);
 		canvas.addPaintListener(painter);
 		canvas.addMouseListener(mouseListener);
-		
-		// Add test objects.
-		Mecha mecha = new Mecha();
-		mecha.setHexCoordinates(table.getHexCoordinates(3, 3));
-		table.addHexPiece(mecha);
-		
-		Mecha mecha2 = new Mecha();
-		mecha2.setHexCoordinates(table.getHexCoordinates(2, 5));
-		table.addHexPiece(mecha2);
 		
 		// Show shell.
 		shell.open ();
@@ -79,34 +86,29 @@ public class BasicHexTable {
 		display.dispose ();
 	}
 	
-//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	
-	private static HexPiecePainter piecePainter = new HexPiecePainter() {
-		@Override
-		public void paintHexPiece(HexPiece piece, GC gc, Rectangle rect) {
-			switch (piece.getId()) {
-				case (Mecha.ID):
-					Mecha.paintHexPiece(piece, gc, rect);
-					break;
+	@Override
+	public void paintHexPiece(HexPiece piece, GC gc, Rectangle rect) {
+		switch (piece.getId()) {
+			case (Mecha.ID):
+				Mecha.paintHexPiece(piece, gc, rect);
+			break;
+			
+			default:
+				Color c = gc.getBackground();
+				gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_RED));
+				gc.fillOval(rect.x + rect.width / 2 - 5, rect.y + rect.height / 2 - 5, 10, 10);
+				gc.setBackground(c);
 				
-				default:
-					Color c = gc.getBackground();
-					gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_RED));
-					gc.fillOval(rect.x + rect.width / 2 - 5, rect.y + rect.height / 2 - 5, 10, 10);
-					gc.setBackground(c);
-						
-			}
 		}
-	};
+	}
 	
-	private static HexTableEventListener eventListener = new HexTableEventListener() {
-		
-		@Override
-		public void cellClicked(HexCoordinates cell) {
-			System.out.println("cellClicked=" + cell);
+	@Override
+	public void cellClicked (HexCoordinates cell) {
+		Collection<? extends HexPiece> pieces = this.config.getHexTable().getHexPieces(cell);
+		if (pieces != null && pieces.size() > 0) {
+			System.out.println ("piece=" + pieces.toArray()[0]);
 		}
-		
-	};
+	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

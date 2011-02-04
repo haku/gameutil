@@ -1,5 +1,6 @@
 package net.sparktank.gameutil.table.swt.test;
 
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
 import net.sparktank.gameutil.table_impl.AbstractHexPiece;
 
@@ -15,11 +16,41 @@ public class Mecha extends AbstractHexPiece {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	private final String name;
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	public Mecha (HexCoordinates coords, String name) {
+		super(coords);
+		this.name = name;
+	}
+	
+	public Mecha (HexCoordinates coords) {
+		super(coords);
+		this.name = null;
+	}
+	
+	public Mecha () {
+		super();
+		this.name = null;
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	@Override
 	public int getId() {
 		return ID;
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
+	@Override
+	public String toString () {
+		if (this.name != null) return "Mecha" + getId() + "/" + this.name;
+		return "Mecha" + getId();
+	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	HexPiecePainter methods.

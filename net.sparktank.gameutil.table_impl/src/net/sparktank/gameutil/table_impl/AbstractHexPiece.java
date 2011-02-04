@@ -14,6 +14,11 @@ public abstract class AbstractHexPiece implements HexPiece {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	public AbstractHexPiece (HexCoordinates coords) {
+		this.coords = coords;
+		this.vector = null;
+	}
+	
 	public AbstractHexPiece () {
 		this.coords = null;
 		this.vector = null;
