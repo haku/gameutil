@@ -23,5 +23,6 @@ import net.sparktank.gameutil.table.CellAnnotation;
 public interface HexCellAnnotation extends CellAnnotation {
 	
 	public Collection<? extends HexCoordinates> getAffectedCells();
+	public boolean affectsCell (HexCoordinates coordinates);
 	
 }

@@ -2,15 +2,16 @@ package net.sparktank.gameutil.table.swt.test;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import net.sparktank.gameutil.table.hex.HexCellAnnotation;
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
-
-import net.sparktank.gameutil.table.hex.HexCellAnnotation;
-import net.sparktank.gameutil.table.hex.HexCoordinates;
 
 public class SelectedMechaAnnotation implements HexCellAnnotation {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -19,16 +20,18 @@ public class SelectedMechaAnnotation implements HexCellAnnotation {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	private final Collection<HexCoordinates> affectedCells;
+	private final Map<HexCoordinates, Void> affectedCells;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	public SelectedMechaAnnotation (HexCoordinates centre, int range) {
-		List<HexCoordinates> l = new LinkedList<HexCoordinates>();
+		Map<HexCoordinates, Void> m = new HashMap<HexCoordinates, Void>();
 		for (List<? extends HexCoordinates> v : centre.getAdjacentHexCoordinates(range).values()) {
-			l.addAll(v);
+			for (HexCoordinates c : v) {
+				m.put(c, null);
+			}
 		}
-		this.affectedCells = Collections.unmodifiableCollection(l);
+		this.affectedCells = Collections.unmodifiableMap(m);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,7 +43,12 @@ public class SelectedMechaAnnotation implements HexCellAnnotation {
 	
 	@Override
 	public Collection<? extends HexCoordinates> getAffectedCells () {
-		return this.affectedCells;
+		return this.affectedCells.keySet();
+	}
+	
+	@Override
+	public boolean affectsCell(HexCoordinates coordinates) {
+		return this.affectedCells.containsKey(coordinates);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

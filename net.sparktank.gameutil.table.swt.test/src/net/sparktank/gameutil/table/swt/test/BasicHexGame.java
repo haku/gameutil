@@ -140,14 +140,17 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 			}
 		}
 		else {
-			table.moveHexPiece(this.selectedPiece, cell);
-			table.removeHexCellAnnotation(this.selectedPieceAnnotation);
+			if (this.selectedPieceAnnotation.affectsCell(cell)) {
+				table.moveHexPiece(this.selectedPiece, cell);
+				System.out.println("placed piece " + this.selectedPiece);
+			}
 			
+			table.removeHexCellAnnotation(this.selectedPieceAnnotation);
 			this.tableCanvas.redraw();
-			System.out.println("placed piece " + this.selectedPiece);
 			
 			this.selectedPiece = null;
 			this.selectedPieceAnnotation = null;
+			
 		}
 	}
 	
