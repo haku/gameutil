@@ -40,7 +40,7 @@ public class HexTableMouseListener implements MouseListener {
 		HexTableEventListener eventListener = this.config.getEventListener();
 		if (eventListener != null) {
 			HexCoordinates cell = getCoordinatesFromXY(e.x, e.y);
-			eventListener.cellClicked(cell);
+			if (cell != null) eventListener.cellClicked(cell);
 		}
 	}
 	
