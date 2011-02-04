@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sparktank.gameutil.table.hex.HexCellAnnotation;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
@@ -21,17 +22,19 @@ public class SelectedMechaAnnotation implements HexCellAnnotation {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	private final Map<HexCoordinates, Void> affectedCells;
+	private final Map<HexCoordinates, Void> affectedCellsOverthrust;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	public SelectedMechaAnnotation (HexCoordinates centre, int range) {
+	public SelectedMechaAnnotation (HexCoordinates centre, Mecha mecha) {
 		Map<HexCoordinates, Void> m = new HashMap<HexCoordinates, Void>();
-		for (List<? extends HexCoordinates> v : centre.getAdjacentHexCoordinates(range).values()) {
-			for (HexCoordinates c : v) {
-				m.put(c, null);
-			}
+		Map<HexCoordinates, Void> mo = new HashMap<HexCoordinates, Void>();
+		for (Entry<Integer, List<? extends HexCoordinates>> v : centre.getAdjacentHexCoordinates(mecha.getMaxThrust()).entrySet()) {
+			if (v.getKey().intValue() >= mecha.getOverThrust()) for (HexCoordinates c : v.getValue()) mo.put(c, null); 
+			for (HexCoordinates c : v.getValue()) m.put(c, null);
 		}
 		this.affectedCells = Collections.unmodifiableMap(m);
+		this.affectedCellsOverthrust = Collections.unmodifiableMap(mo);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -53,8 +56,14 @@ public class SelectedMechaAnnotation implements HexCellAnnotation {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	static public void paintHexCellAnnotation(HexCellAnnotation annotation, GC gc, Rectangle rect) {
-		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GREEN));
+	public boolean isOverthrust (HexCoordinates coordinates) {
+		return this.affectedCellsOverthrust.containsKey(coordinates);
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	static public void paintHexCellAnnotation(SelectedMechaAnnotation annotation, HexCoordinates coordinates, GC gc, Rectangle rect) {
+		gc.setBackground(gc.getDevice().getSystemColor(annotation.isOverthrust(coordinates) ? SWT.COLOR_DARK_RED : SWT.COLOR_DARK_GREEN));
 		gc.fillOval(rect.x, rect.y, rect.width, rect.height);
 	}
 	

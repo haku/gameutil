@@ -37,6 +37,16 @@ public class Mecha extends AbstractHexPiece {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	public int getMaxThrust () {
+		return 3;
+	}
+	
+	public int getOverThrust () {
+		return 3;
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	@Override
 	public int getTypeId() {
 		return TYPEID;

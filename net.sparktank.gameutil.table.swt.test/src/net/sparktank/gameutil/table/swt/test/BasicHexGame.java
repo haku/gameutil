@@ -91,10 +91,10 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	}
 	
 	@Override
-	public void paintHexCellAnnotation(HexCellAnnotation annotation, GC gc, Rectangle rect) {
+	public void paintHexCellAnnotation(HexCellAnnotation annotation, HexCoordinates coordinates, GC gc, Rectangle rect) {
 		switch (annotation.getTypeId()) {
 			case (SelectedMechaAnnotation.TYPEID):
-				SelectedMechaAnnotation.paintHexCellAnnotation(annotation, gc, rect);
+				SelectedMechaAnnotation.paintHexCellAnnotation((SelectedMechaAnnotation) annotation, coordinates, gc, rect);
 				break;
 			
 			default:
@@ -130,13 +130,21 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 			Collection<? extends HexPiece> pieces = table.getHexPieces(cell);
 			if (pieces != null && pieces.size() > 0) {
 				HexPiece piece = pieces.iterator().next();
-				this.selectedPiece = piece;
 				
-				this.selectedPieceAnnotation = new SelectedMechaAnnotation(cell, 3); // TODO fix hard-coded range.
-				table.addHexCellAnnotation(this.selectedPieceAnnotation);
-				
-				this.tableCanvas.redraw();
-				System.out.println("Selected piece " + piece);
+				if (piece instanceof Mecha) {
+					Mecha mecha = (Mecha) piece;
+					
+					this.selectedPiece = piece;
+					
+					this.selectedPieceAnnotation = new SelectedMechaAnnotation(cell, mecha);
+					table.addHexCellAnnotation(this.selectedPieceAnnotation);
+					
+					this.tableCanvas.redraw();
+					System.out.println("Selected mecha " + piece);
+				}
+				else {
+					System.out.println("do not know how to select piece " + piece);
+				}
 			}
 		}
 		else {

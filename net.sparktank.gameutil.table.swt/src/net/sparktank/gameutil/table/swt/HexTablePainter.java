@@ -85,7 +85,7 @@ public class HexTablePainter implements PaintListener {
 			Collection<? extends HexCellAnnotation> annotations = this.config.getHexTable().getHexCellAnnotations(coord);
 			if (annotations != null && annotations.size() > 0) {
 				for (HexCellAnnotation annotation : annotations) {
-					this.cellAnnotationPainter.paintHexCellAnnotation(annotation, e.gc, rect);
+					this.cellAnnotationPainter.paintHexCellAnnotation(annotation, coord, e.gc, rect);
 				}
 			}
 			
