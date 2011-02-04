@@ -30,6 +30,7 @@ public class SelectedMechaAnnotation implements HexCellAnnotation {
 		Map<HexCoordinates, Void> m = new HashMap<HexCoordinates, Void>();
 		Map<HexCoordinates, Void> mo = new HashMap<HexCoordinates, Void>();
 		for (Entry<Integer, List<? extends HexCoordinates>> v : centre.getAdjacentHexCoordinates(mecha.getMaxThrust()).entrySet()) {
+			if (v.getKey().intValue() == 0) continue;
 			if (v.getKey().intValue() >= mecha.getOverThrust()) for (HexCoordinates c : v.getValue()) mo.put(c, null); 
 			for (HexCoordinates c : v.getValue()) m.put(c, null);
 		}
