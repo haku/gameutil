@@ -19,6 +19,7 @@ package net.sparktank.gameutil.table.swt;
 import java.util.Collection;
 
 import net.sparktank.gameutil.table.hex.HexBearing;
+import net.sparktank.gameutil.table.hex.HexCellAnnotation;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
 
@@ -42,10 +43,12 @@ public class HexTablePainter implements PaintListener {
 	private final HexTableConfig config;
 	private final Canvas canvas;
 	private final HexPiecePainter piecePainter;
+	private final HexCellAnnotationPainter cellAnnotationPainter;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public HexTablePainter (HexTableConfig config, Canvas canvas, HexPiecePainter piecePainter) {
+	public HexTablePainter (HexTableConfig config, Canvas canvas, HexPiecePainter piecePainter, HexCellAnnotationPainter cellAnnotationPainter) {
+		this.cellAnnotationPainter = cellAnnotationPainter;
 		if (config == null) throw new IllegalArgumentException("config==null");
 		if (canvas == null) throw new IllegalArgumentException("canvas==null");
 		if (piecePainter == null) throw new IllegalArgumentException("piecePainter==null");
@@ -81,6 +84,14 @@ public class HexTablePainter implements PaintListener {
 			// Draw cell.
 			e.gc.setForeground(e.gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
 			e.gc.drawOval(rect.x, rect.y, rect.width, rect.height);
+			
+			// Draw cell annotations?
+			Collection<? extends HexCellAnnotation> annotations = this.config.getHexTable().getHexCellAnnotations(coord);
+			if (annotations != null && annotations.size() > 0) {
+				for (HexCellAnnotation annotation : annotations) {
+					this.cellAnnotationPainter.paintHexCellAnnotation(annotation, e.gc, rect);
+				}
+			}
 			
 			// Draw pieces?
 			final Collection<? extends HexPiece> pieces = this.config.getHexTable().getHexPieces(coord);

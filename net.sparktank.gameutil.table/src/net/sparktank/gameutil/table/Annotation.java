@@ -17,7 +17,9 @@
 package net.sparktank.gameutil.table;
 
 public interface Annotation {
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	// TODO implant.
+	public int getTypeId();
 	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

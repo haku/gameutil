@@ -19,7 +19,7 @@ package net.sparktank.gameutil.table;
 public interface Piece {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public int getId();
+	public int getTypeId();
 	public String getName();
 	
 	public Coordinates getCoordinates ();

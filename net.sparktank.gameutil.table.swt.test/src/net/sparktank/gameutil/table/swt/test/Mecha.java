@@ -12,7 +12,7 @@ import org.eclipse.swt.graphics.Rectangle;
 public class Mecha extends AbstractHexPiece {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public static final int ID = 100;
+	public static final int TYPEID = 100;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
@@ -38,8 +38,8 @@ public class Mecha extends AbstractHexPiece {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	@Override
-	public int getId() {
-		return ID;
+	public int getTypeId() {
+		return TYPEID;
 	}
 	
 	@Override
@@ -51,7 +51,7 @@ public class Mecha extends AbstractHexPiece {
 	public String toString () {
 		StringBuilder s = new StringBuilder();
 		s.append("Mecha");
-		s.append(getId());
+		s.append(getTypeId());
 		if (this.name != null) {
 			s.append("/");
 			s.append(this.name);

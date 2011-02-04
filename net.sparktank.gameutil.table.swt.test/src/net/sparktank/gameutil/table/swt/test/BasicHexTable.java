@@ -18,9 +18,11 @@ package net.sparktank.gameutil.table.swt.test;
 
 import java.util.Collection;
 
+import net.sparktank.gameutil.table.hex.HexCellAnnotation;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
 import net.sparktank.gameutil.table.hex.HexTable;
+import net.sparktank.gameutil.table.swt.HexCellAnnotationPainter;
 import net.sparktank.gameutil.table.swt.HexPiecePainter;
 import net.sparktank.gameutil.table.swt.HexTableConfig;
 import net.sparktank.gameutil.table.swt.HexTableEventListener;
@@ -42,7 +44,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  * @author haku
  */
-public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
+public class BasicHexTable implements HexPiecePainter, HexCellAnnotationPainter, HexTableEventListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public static void main(String[] args) {
@@ -75,7 +77,7 @@ public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
 		
 		// Setup GUI.
 		this.tableCanvas = new Canvas(shell, SWT.NONE);
-		HexTablePainter painter = new HexTablePainter(this.config, this.tableCanvas, this);
+		HexTablePainter painter = new HexTablePainter(this.config, this.tableCanvas, this, this);
 		HexTableMouseListener mouseListener = new HexTableMouseListener(this.config);
 		this.tableCanvas.addPaintListener(painter);
 		this.tableCanvas.addMouseListener(mouseListener);
@@ -89,11 +91,24 @@ public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
 	}
 	
 	@Override
+	public void paintHexCellAnnotation(HexCellAnnotation annotation, GC gc, Rectangle rect) {
+		switch (annotation.getTypeId()) {
+			case (SelectedMechaAnnotation.TYPEID):
+				SelectedMechaAnnotation.paintHexCellAnnotation(annotation, gc, rect);
+				break;
+			
+			default:
+				System.err.println("No handler to draw annotation type " + annotation.getTypeId() + ".");
+			
+		}
+	}
+	
+	@Override
 	public void paintHexPiece(HexPiece piece, GC gc, Rectangle rect) {
-		switch (piece.getId()) {
-			case (Mecha.ID):
+		switch (piece.getTypeId()) {
+			case (Mecha.TYPEID):
 				Mecha.paintHexPiece(piece, gc, rect);
-			break;
+				break;
 			
 			default:
 				Color c = gc.getBackground();
@@ -105,6 +120,7 @@ public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
 	}
 	
 	private HexPiece selectedPiece = null;
+	private SelectedMechaAnnotation selectedPieceAnnotation = null;
 	
 	@Override
 	public void cellClicked (HexCoordinates cell) {
@@ -115,14 +131,23 @@ public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
 			if (pieces != null && pieces.size() > 0) {
 				HexPiece piece = pieces.iterator().next();
 				this.selectedPiece = piece;
+				
+				this.selectedPieceAnnotation = new SelectedMechaAnnotation(cell, 3); // TODO fix hard-coded range.
+				table.addHexCellAnnotation(this.selectedPieceAnnotation);
+				
+				this.tableCanvas.redraw();
 				System.out.println("Selected piece " + piece);
 			}
 		}
 		else {
 			table.moveHexPiece(this.selectedPiece, cell);
+			table.removeHexCellAnnotation(this.selectedPieceAnnotation);
+			
 			this.tableCanvas.redraw();
 			System.out.println("placed piece " + this.selectedPiece);
+			
 			this.selectedPiece = null;
+			this.selectedPieceAnnotation = null;
 		}
 	}
 	

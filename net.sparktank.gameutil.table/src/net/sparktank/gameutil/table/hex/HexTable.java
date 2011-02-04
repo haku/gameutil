@@ -55,5 +55,14 @@ public interface HexTable extends Table {
 	
 	public boolean removeHexPiece (HexPiece piece);
 	
+	
+	public void addHexCellAnnotation (HexCellAnnotation annotation);
+	
+	public void removeHexCellAnnotation (HexCellAnnotation annotation);
+	
+	public Collection<? extends HexCellAnnotation> getHexCellAnnotations ();
+	
+	public Collection<? extends HexCellAnnotation> getHexCellAnnotations (HexCoordinates coordinates);
+	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

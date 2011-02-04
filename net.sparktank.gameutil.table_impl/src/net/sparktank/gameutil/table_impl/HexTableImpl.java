@@ -17,6 +17,7 @@
 package net.sparktank.gameutil.table_impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,7 @@ import net.sparktank.gameutil.table.Annotation;
 import net.sparktank.gameutil.table.CellAnnotation;
 import net.sparktank.gameutil.table.Piece;
 import net.sparktank.gameutil.table.PieceAnnotation;
+import net.sparktank.gameutil.table.hex.HexCellAnnotation;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
 import net.sparktank.gameutil.table.hex.HexTable;
@@ -38,6 +40,9 @@ public class HexTableImpl implements HexTable {
     private final int height;
 	
     private final Map<Long, Collection<HexPiece>> pieces;
+    
+    private final Map<HexCellAnnotation, Void> annotations;
+    private final Map<Long, Collection<HexCellAnnotation>> annotationCells;
     
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Constructors.
@@ -52,6 +57,9 @@ public class HexTableImpl implements HexTable {
 		this.height = height;
 		
 		this.pieces = new HashMap<Long, Collection<HexPiece>>();
+		
+		this.annotations = new HashMap<HexCellAnnotation, Void>();
+		this.annotationCells = new HashMap<Long, Collection<HexCellAnnotation>>();
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -78,7 +86,8 @@ public class HexTableImpl implements HexTable {
 	
 	@Override
 	public Collection<? extends HexPiece> getHexPieces (HexCoordinates coordinates) {
-		return this.pieces.get(getHexCoordinatesHash(coordinates));
+		Collection<HexPiece> c = this.pieces.get(getHexCoordinatesHash(coordinates));
+		return c == null ? null : Collections.unmodifiableCollection(c);
 	}
 	
 	@Override
@@ -135,11 +144,62 @@ public class HexTableImpl implements HexTable {
 		HexCoordinates coords = piece.getHexCoordinates();
 		if (coords == null) throw new IllegalArgumentException("piece's coords can not be null.");
 		
-		Long l = getHexCoordinatesHash(coords);
-		Collection<HexPiece> c = this.pieces.get(l);
+		Long cellHash = getHexCoordinatesHash(coords);
+		Collection<HexPiece> c = this.pieces.get(cellHash);
 		
-		return c.remove(piece);
+		if (c != null) {
+    		boolean remove = c.remove(piece);
+    		if (c.size() < 1) this.pieces.remove(cellHash);
+    		return remove;
+		}
+		
+		return false;
 	}
+	
+	@Override
+	public Collection<? extends HexCellAnnotation> getHexCellAnnotations() {
+		return Collections.unmodifiableCollection(this.annotations.keySet());
+	}
+	
+	@Override
+	public Collection<? extends HexCellAnnotation> getHexCellAnnotations(HexCoordinates coordinates) {
+		Collection<HexCellAnnotation> c = this.annotationCells.get(getHexCoordinatesHash(coordinates));
+		return c == null ? null : Collections.unmodifiableCollection(c);
+	}
+	
+	@Override
+	public void addHexCellAnnotation(HexCellAnnotation annotation) {
+		if (this.annotations.containsKey(annotation)) throw new IllegalArgumentException("Annotation already present.");
+		this.annotations.put(annotation, null);
+		
+		for (HexCoordinates c : annotation.getAffectedCells()) {
+			Long cellHash = getHexCoordinatesHash(c);
+			Collection<HexCellAnnotation> l = this.annotationCells.get(cellHash);
+			if (l == null) {
+				l = new LinkedList<HexCellAnnotation>();
+				this.annotationCells.put(cellHash, l);
+			}
+			l.add(annotation);
+		}
+		
+	}
+	
+	@Override
+	public void removeHexCellAnnotation(HexCellAnnotation annotation) {
+		if (!this.annotations.containsKey(annotation)) throw new IllegalArgumentException("Annotation not present present.");
+		
+		for (HexCoordinates c : annotation.getAffectedCells()) {
+			Long cellHash = getHexCoordinatesHash(c);
+			Collection<HexCellAnnotation> l = this.annotationCells.get(cellHash);
+			if (l != null) {
+				l.remove(annotation);
+				if (l.size() < 1) this.annotationCells.remove(cellHash);
+			}
+		}
+		
+		this.annotations.remove(annotation);
+	}
+	
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Table methods.
