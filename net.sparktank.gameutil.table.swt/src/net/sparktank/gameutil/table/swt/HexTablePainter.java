@@ -79,6 +79,7 @@ public class HexTablePainter implements PaintListener {
 			final Rectangle rect = new Rectangle(x, y, cellSize, cellSize);
 			
 			// Draw cell.
+			e.gc.setForeground(e.gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
 			e.gc.drawOval(rect.x, rect.y, rect.width, rect.height);
 			
 			// Draw pieces?
