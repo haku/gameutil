@@ -16,7 +16,7 @@
 
 package net.sparktank.gameutil.table.swt;
 
-import net.sparktank.gameutil.table.hex.HexCell;
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -39,7 +39,7 @@ public class HexTableMouseListener implements MouseListener {
 	public void mouseDown(MouseEvent e) {
 		HexTableEventListener eventListener = this.config.getEventListener();
 		if (eventListener != null) {
-			HexCell cell = getCellFromXY(e.x, e.y);
+			HexCoordinates cell = getCoordinatesFromXY(e.x, e.y);
 			eventListener.cellClicked(cell);
 		}
 	}
@@ -58,8 +58,8 @@ public class HexTableMouseListener implements MouseListener {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	protected HexCell getCellFromXY (int x, int y) {
-		HexCell topLeftCell = this.config.getTopLeftCell();
+	protected HexCoordinates getCoordinatesFromXY (int x, int y) {
+		HexCoordinates topLeftCoordinates = this.config.getTopLeftCoordinates();
 		int cellSize = this.config.getCellSize();
 		int halfCellSize = cellSize / 2;
 		
@@ -67,12 +67,12 @@ public class HexTableMouseListener implements MouseListener {
 		
 		int rowIndent = (visibleCellY % 2) * halfCellSize; // 0 or halfCellSize.
 		int rowOffset = visibleCellY / 2; // The number of cells x is shifted by.  Increases by 1 for every 2 rows down.
-		int visibleCellX = (int) Math.floor(((x - rowIndent) / (float)cellSize) - rowOffset);
+		int visibleCellX = (int) Math.floor((x - rowIndent) / (float)cellSize) - rowOffset; // Round down, not towards 0.
 		
-		int cellY = topLeftCell.getCoordinates().getY() + visibleCellY;
-		int cellX = topLeftCell.getCoordinates().getX() + visibleCellX;
+		int cellY = topLeftCoordinates.getY() + visibleCellY;
+		int cellX = topLeftCoordinates.getX() + visibleCellX;
 		
-		HexCell cell = this.config.getHexTable().getHexCell(cellX, cellY);
+		HexCoordinates cell = this.config.getHexTable().getHexCoordinates(cellX, cellY);
 		
 		return cell;
 	}

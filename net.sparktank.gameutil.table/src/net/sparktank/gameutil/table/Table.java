@@ -21,9 +21,7 @@ import java.util.Collection;
 public interface Table {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public Collection<? extends Cell> getCells ();
 	public Collection<? extends Piece> getPieces ();
-	
 	public Collection<? extends Annotation> getAnnotations ();
 	public Collection<? extends CellAnnotation> getCellAnnotations ();
 	public Collection<? extends PieceAnnotation> getPieceAnnotations ();

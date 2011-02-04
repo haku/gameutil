@@ -21,38 +21,26 @@ import java.util.List;
 
 import net.sparktank.gameutil.table.Table;
 
-/**
- * 
- * Note:
- * A HexTable may be any shape as long as every cell is adjacent to another cell.
- * For this reason there are no getWidth() or getHeight() methods as they would not mean anything.
- * 
- * 
- */
 public interface HexTable extends Table {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	/**
-	 * Returns all the cells on the table.
+	 * Return an object representing these coordinates.
+	 * Returns null if the coordinates are out of range.
 	 */
-	public Collection<? extends HexCell> getHexCells ();
+	public HexCoordinates getHexCoordinates (int x, int y);
 	
 	/**
-	 * Returns all the cells on the table that are referenced by the coordinates parameter.
-	 * Any illegal entries (coordinates for which no cell exists) are ignored.
-	 * The HexCell will be returned in the same order as the HexCoordinates were passed in.
+	 * Returns all the HexPiece instances on the table.
 	 */
-	public List<? extends HexCell> getHexCells (List<? extends HexCoordinates> coordinates);
-	
-	/**
-	 * Fetch a specific cell based on its coordinates.
-	 */
-	public HexCell getHexCell (HexCoordinates coordinates);
-	public HexCell getHexCell (int x, int y);
-	
-//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	
 	public Collection<? extends HexPiece> getHexPieces ();
+	
+	/**
+	 * Returns all the HexPiece instances on the table that are referenced by the coordinates parameter.
+	 * Any illegal entries (coordinates for which no cell exists) are ignored.
+	 * The HexPiece instances will be returned in the same order as the HexCoordinates were passed in.
+	 */
+	public Collection<? extends HexPiece> getHexPieces (List<? extends HexCoordinates> coordinates);
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

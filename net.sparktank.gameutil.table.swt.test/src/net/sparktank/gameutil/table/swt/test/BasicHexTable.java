@@ -16,7 +16,7 @@
 
 package net.sparktank.gameutil.table.swt.test;
 
-import net.sparktank.gameutil.table.hex.HexCell;
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexTable;
 import net.sparktank.gameutil.table.swt.HexTableConfig;
 import net.sparktank.gameutil.table.swt.HexTableEventListener;
@@ -46,7 +46,7 @@ public class BasicHexTable {
 		shell.setLayout(new FillLayout());
 		
 		HexTable table = new HexTableImpl(20, 20);
-		HexTableConfig config = new HexTableConfig(table, table.getHexCell(0, 0));
+		HexTableConfig config = new HexTableConfig(table, table.getHexCoordinates(0, 0));
 		config.setEventListener(eventListener);
 		
 		Canvas canvas = new Canvas(shell, SWT.NONE);
@@ -67,7 +67,7 @@ public class BasicHexTable {
 	private static HexTableEventListener eventListener = new HexTableEventListener() {
 		
 		@Override
-		public void cellClicked(HexCell cell) {
+		public void cellClicked(HexCoordinates cell) {
 			System.out.println("cellClicked=" + cell);
 		}
 		

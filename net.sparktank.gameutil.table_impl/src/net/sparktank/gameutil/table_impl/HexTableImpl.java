@@ -17,19 +17,15 @@
 package net.sparktank.gameutil.table_impl;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import net.sparktank.gameutil.table.Annotation;
-import net.sparktank.gameutil.table.Cell;
 import net.sparktank.gameutil.table.CellAnnotation;
 import net.sparktank.gameutil.table.Piece;
 import net.sparktank.gameutil.table.PieceAnnotation;
-import net.sparktank.gameutil.table.hex.HexCell;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
 import net.sparktank.gameutil.table.hex.HexTable;
@@ -38,10 +34,11 @@ public class HexTableImpl implements HexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Fields.
 	
-	private final Map<Long, HexCellImpl> cellMap;
     private final int width;
     private final int height;
 	
+    private final Map<Long, HexPiece> pieces;
+    
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Constructors.
 	
@@ -53,53 +50,44 @@ public class HexTableImpl implements HexTable {
 	public HexTableImpl (int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.cellMap = generateRectHexGrid(this, width, height);
+		
+		this.pieces = new HashMap<Long, HexPiece>();
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	HexTable methods.
 	
 	@Override
-	public Collection<? extends HexCell> getHexCells() {
-		return this.cellMap.values();
+	public HexCoordinates getHexCoordinates (int x, int y) {
+		if (y < 0 || y >= this.height) return null;
+		
+		int rowOffset = 0 - y / 2; // The number of cells x is shifted by.  Increases by 1 for every 2 rows down.  This will round towards 0.
+		if (x < rowOffset || x >= rowOffset + this.width) return null;
+		
+		return new HexCoordinatesImpl(x, y);
 	}
 	
 	@Override
-	public List<? extends HexCell> getHexCells(List<? extends HexCoordinates> coordinates) {
-		List<HexCell> ret = new LinkedList<HexCell>();
+	public Collection<? extends HexPiece> getHexPieces () {
+		return this.pieces.values();
+	}
+	
+	@Override
+	public Collection<? extends HexPiece> getHexPieces (List<? extends HexCoordinates> coordinates) {
+		List<HexPiece> ret = new LinkedList<HexPiece>();
 		for (HexCoordinates coord : coordinates) {
-			HexCell cell = getHexCell(coord);
-			if (cell != null) ret.add(cell);
+			HexPiece p = this.pieces.get(getHexCoordinatesHash(coord));
+			if (p != null) ret.add(p);
 		}
 		return ret;
-	}
-	
-	@Override
-	public HexCell getHexCell(HexCoordinates coordinates) {
-		return getHexCell(coordinates.getX(), coordinates.getY());
-	}
-	
-	@Override
-	public HexCell getHexCell(int x, int y) {
-		return this.cellMap.get(Long.valueOf(HexCoordinatesImpl.longHashCoordinates(x, y)));
-	}
-	
-	@Override
-	public Collection<? extends HexPiece> getHexPieces() {
-		throw new RuntimeException("Not implemented.");
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Table methods.
 	
 	@Override
-	public Collection<? extends Cell> getCells() {
-		return this.cellMap.values();
-	}
-	
-	@Override
 	public Collection<? extends Piece> getPieces() {
-		throw new RuntimeException("Not implemented.");
+		return getHexPieces();
 	}
 	
 	@Override
@@ -127,34 +115,43 @@ public class HexTableImpl implements HexTable {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	static helper methods.
 	
-	protected Map<Long, HexCellImpl> generateRectHexGrid (HexTable table, int w, int h) {
-		ConcurrentMap<Long, HexCellImpl> map = new ConcurrentHashMap<Long, HexCellImpl>();
-		
-//		System.err.println("Cells:");
-		
-		int x_offset = 0;
-		for (int y = 0; y < h; y++) {
-			if (y > 0 && y % 2 == 0) x_offset--;
-			for (int x = 0; x < w; x++) {
-    			HexCoordinatesImpl coord = new HexCoordinatesImpl(x + x_offset, y);
-    			HexCellImpl cell = new HexCellImpl(table, coord);
-    			HexCellImpl r = map.putIfAbsent(Long.valueOf(HexCoordinatesImpl.longHashCoordinates(x + x_offset, y)), cell);
-				if (r != null) throw new RuntimeException("Hash collision.  The hash for "
-							+ r.getCoordinates().getX() + "," + r.getCoordinates().getY()
-							+ " = the hash for " + coord.getX() + "," + coord.getY() + ".");
-    			
-//    			System.err.print(" ");
-//    			System.err.print(coord);
-			}
-//			System.err.println();
-		}
-		
-		/* Once made, the board should not be modified.
-		 * If this is changed, be sure to update getter methods so that
-		 * the modifiable form does not leak.
-		 */
-		return Collections.unmodifiableMap(map);
+	static public Long getHexCoordinatesHash (HexCoordinates coords) {
+		return getHexCoordinatesHash(coords.getX(), coords.getY());
 	}
+	
+	static public Long getHexCoordinatesHash (int x, int y) {
+		return Long.valueOf(HexCoordinatesImpl.longHashCoordinates(x, y));
+	}
+	
+//	@Deprecated
+//	protected Map<Long, HexCellImpl> generateRectHexGrid (HexTable table, int w, int h) {
+//		ConcurrentMap<Long, HexCellImpl> map = new ConcurrentHashMap<Long, HexCellImpl>();
+//		
+////		System.err.println("Cells:");
+//		
+//		int x_offset = 0;
+//		for (int y = 0; y < h; y++) {
+//			if (y > 0 && y % 2 == 0) x_offset--;
+//			for (int x = 0; x < w; x++) {
+//    			HexCoordinatesImpl coord = new HexCoordinatesImpl(x + x_offset, y);
+//    			HexCellImpl cell = new HexCellImpl(table, coord);
+//    			HexCellImpl r = map.putIfAbsent(Long.valueOf(HexCoordinatesImpl.longHashCoordinates(x + x_offset, y)), cell);
+//				if (r != null) throw new RuntimeException("Hash collision.  The hash for "
+//							+ r.getCoordinates().getX() + "," + r.getCoordinates().getY()
+//							+ " = the hash for " + coord.getX() + "," + coord.getY() + ".");
+//    			
+////    			System.err.print(" ");
+////    			System.err.print(coord);
+//			}
+////			System.err.println();
+//		}
+//		
+//		/* Once made, the board should not be modified.
+//		 * If this is changed, be sure to update getter methods so that
+//		 * the modifiable form does not leak.
+//		 */
+//		return Collections.unmodifiableMap(map);
+//	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

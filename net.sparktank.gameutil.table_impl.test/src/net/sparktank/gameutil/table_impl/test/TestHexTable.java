@@ -17,8 +17,11 @@
 package net.sparktank.gameutil.table_impl.test;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import net.sparktank.gameutil.table.hex.HexCell;
+import net.sparktank.gameutil.table.Coordinates;
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexTable;
 import net.sparktank.gameutil.table_impl.HexTableImpl;
 
@@ -46,10 +49,14 @@ public class TestHexTable {
 	public void testHexTableGetCells () {
 		HexTable hexTable = new HexTableImpl(100, 100);
 		
-		HexCell hexCell = hexTable.getHexCell(50, 50);
-		Collection<? extends HexCell> adjacentHexCells = hexCell.getAdjacentHexCells(10);
+		HexCoordinates coord = hexTable.getHexCoordinates(50, 50);
+		Map<Integer, ? extends Collection<? extends Coordinates>> adjacentCoordinates = coord.getAdjacentCoordinates(10);
 		
-		if (adjacentHexCells.size() != 331) throw new RuntimeException();
+		int n = 0;
+		for (Entry<Integer, ? extends Collection<? extends Coordinates>> e : adjacentCoordinates.entrySet()) {
+			n = n + e.getValue().size();
+		}
+		if (n != 331) throw new RuntimeException("found " + adjacentCoordinates.size() + " expected 331.");
 		
 		// TODO do a better test here.
 	}
@@ -57,41 +64,41 @@ public class TestHexTable {
 	@Test
 	public void testHexTableBig () {
 		HexTable hexTable = new HexTableImpl(500, 500);
-		HexCell cell = hexTable.getHexCell(250,250);
-		cell.getAdjacentCells(100);
+		HexCoordinates coord = hexTable.getHexCoordinates(250,250);
+		coord.getAdjacentCoordinates(100);
 	}
 	
 	@Test
 	public void testHexTableVeryBig () {
 		HexTable hexTable = new HexTableImpl(1000, 1000);
-		HexCell cell = hexTable.getHexCell(250,250);
-		cell.getAdjacentCells(100);
+		HexCoordinates coord = hexTable.getHexCoordinates(250,250);
+		coord.getAdjacentCoordinates(100);
 	}
 	
 	@Test
 	public void testHexTableHuge () {
 		HexTable hexTable = new HexTableImpl(1500, 1500);
-		HexCell cell = hexTable.getHexCell(250,250);
-		cell.getAdjacentCells(100);
+		HexCoordinates coord = hexTable.getHexCoordinates(250,250);
+		coord.getAdjacentCoordinates(100);
 	}
 	
 	@Test
 	public void testHexTableUber () {
 		HexTable hexTable = new HexTableImpl(2000, 2000);
-		HexCell cell = hexTable.getHexCell(250,250);
-		cell.getAdjacentCells(100);
+		HexCoordinates coord = hexTable.getHexCoordinates(250,250);
+		coord.getAdjacentCoordinates(100);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public void testHexTableHasCell (HexTable table, int x, int y, boolean expected) {
 		
-		HexCell cell = table.getHexCell(x, y);
+		HexCoordinates coord = table.getHexCoordinates(x, y);
 		
-		if (cell == null && expected) {
+		if (coord == null && expected) {
 			throw new RuntimeException("Expected cell not found: " + x + "," + y);
 		}
-		else if (cell != null && !expected) {
+		else if (coord != null && !expected) {
 			throw new RuntimeException("Unexpected cell found: " + x + "," + y);
 		}
 	}

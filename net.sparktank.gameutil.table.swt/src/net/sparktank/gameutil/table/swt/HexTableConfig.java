@@ -1,6 +1,6 @@
 package net.sparktank.gameutil.table.swt;
 
-import net.sparktank.gameutil.table.hex.HexCell;
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexTable;
 
 public class HexTableConfig {
@@ -12,15 +12,15 @@ public class HexTableConfig {
 	
 	private final HexTable hexTable;
 	
-	private HexCell topLeftCell = null;
+	private HexCoordinates topLeftCoordinates = null;
 	private int cellSize = DEFAULTCELLSIZE;
 	private HexTableEventListener eventListener = null;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public HexTableConfig (HexTable hexTable, HexCell topLeftCell) {
+	public HexTableConfig (HexTable hexTable, HexCoordinates topLeftCoordinates) {
 		this.hexTable = hexTable;
-		this.topLeftCell = topLeftCell;
+		this.topLeftCoordinates = topLeftCoordinates;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -36,11 +36,11 @@ public class HexTableConfig {
 		return this.cellSize;
 	}
 	
-	public void setTopLeftCell(HexCell topLeftCell) {
-		this.topLeftCell = topLeftCell;
+	public void setTopLeftCoordinates(HexCoordinates topLeftCoordinates) {
+		this.topLeftCoordinates = topLeftCoordinates;
 	}
-	public HexCell getTopLeftCell() {
-		return this.topLeftCell;
+	public HexCoordinates getTopLeftCoordinates() {
+		return this.topLeftCoordinates;
 	}
 	
 	public void setEventListener(HexTableEventListener eventListener) {

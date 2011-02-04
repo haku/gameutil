@@ -1,11 +1,11 @@
 package net.sparktank.gameutil.table.swt;
 
-import net.sparktank.gameutil.table.hex.HexCell;
+import net.sparktank.gameutil.table.hex.HexCoordinates;
 
 public interface HexTableEventListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public void cellClicked (HexCell cell);
+	public void cellClicked (HexCoordinates cell);
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

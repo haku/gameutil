@@ -17,7 +17,6 @@
 package net.sparktank.gameutil.table.swt;
 
 import net.sparktank.gameutil.table.hex.HexBearing;
-import net.sparktank.gameutil.table.hex.HexCell;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 
 import org.eclipse.swt.SWT;
@@ -59,33 +58,30 @@ public class HexTablePainter implements PaintListener {
 		Font font = new Font(e.gc.getDevice(), fontData.getName(), cellSize / 4, fontData.getStyle());
 		e.gc.setFont(font);
 		
-		HexCell firstCell = this.config.getTopLeftCell(); // The top-left most cell to draw.
-		HexCell rowStart = firstCell; // The first cell of this row.
-		HexCell cell = rowStart; // The cell we are currently drawing.
+		HexCoordinates firstCoord = this.config.getTopLeftCoordinates(); // The top-left most cell to draw.
+		HexCoordinates rowStart = firstCoord; // The first cell of this row.
+		HexCoordinates coord = rowStart; // The cell we are currently drawing.
 		int rowNumber = 0; // The row we are drawing, where 0 is at the top of the screen.
 		int leftIndent = 0; // How much to indent the current row (either 0 or HALFCELLSIZE).
-		while (true) {
-			HexCoordinates coord = cell.getHexCoordinates();
-			int x = (coord.getX() - firstCell.getCoordinates().getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * cellSize + leftIndent;
-			int y = (int) (((coord.getY() - firstCell.getCoordinates().getY()) * cellSize) * HEXPITCH);
+		while (coord != null) {
+			int x = (coord.getX() - firstCoord.getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * cellSize + leftIndent;
+			int y = (int) (((coord.getY() - firstCoord.getY()) * cellSize) * HEXPITCH);
 			Rectangle rect = new Rectangle(x, y, cellSize, cellSize);
 			
 			String s = coord.getX() + "," + coord.getY();
 			drawTextHVCen(e, rect.x + halfCellSize, rect.y + halfCellSize, s);
 			e.gc.drawOval(rect.x, rect.y, cellSize, cellSize);
 			
-			cell = this.config.getHexTable().getHexCell(coord.getX() + HexBearing.EAST.getDx(), coord.getY() + HexBearing.EAST.getDy());
-			if (cell == null || rect.x + rect.width > clientArea.width) {
+			coord = this.config.getHexTable().getHexCoordinates(coord.getX() + HexBearing.EAST.getDx(), coord.getY() + HexBearing.EAST.getDy());
+			if (coord == null || rect.x + rect.width > clientArea.width) {
 				if (rect.y + rect.height > clientArea.height) break;
 				
 				HexBearing bearing = rowNumber % 2 == 0 ? HexBearing.SOUTHEAST : HexBearing.SOUTHWEST;
-				cell = this.config.getHexTable().getHexCell(rowStart.getCoordinates().getX() + bearing.getDx(),
-						rowStart.getCoordinates().getY() + bearing.getDy());
-				rowStart = cell;
+				coord = this.config.getHexTable().getHexCoordinates(rowStart.getX() + bearing.getDx(), rowStart.getY() + bearing.getDy());
+				rowStart = coord;
 				rowNumber++;
 				leftIndent = (rowNumber % 2) * halfCellSize;
 			}
-			if (cell == null) break;
 		}
 		
 		font.dispose();
