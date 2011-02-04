@@ -81,10 +81,6 @@ public class HexTablePainter implements PaintListener {
 			final int y = (int) (((coord.getY() - firstCoord.getY()) * cellSize) * HEXPITCH);
 			final Rectangle rect = new Rectangle(x, y, cellSize, cellSize);
 			
-			// Draw cell.
-			e.gc.setForeground(e.gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
-			e.gc.drawOval(rect.x, rect.y, rect.width, rect.height);
-			
 			// Draw cell annotations?
 			Collection<? extends HexCellAnnotation> annotations = this.config.getHexTable().getHexCellAnnotations(coord);
 			if (annotations != null && annotations.size() > 0) {
@@ -100,7 +96,13 @@ public class HexTablePainter implements PaintListener {
     				this.piecePainter.paintHexPiece(piece, e.gc, rect);
     			}
 			}
-			else {// Draw coordinate label only if cell is empty.
+			
+			// Draw cell.
+			e.gc.setForeground(e.gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
+			e.gc.drawOval(rect.x, rect.y, rect.width, rect.height);
+			
+			// Draw coordinate label only if cell is empty.
+			if ((annotations == null || annotations.size() < 1) && (pieces == null || pieces.size() < 1)) {
 				final String s = coord.getX() + "," + coord.getY();
 				drawTextHVCen(e.gc, rect.x + halfCellSize, rect.y + halfCellSize, s);
 			}
