@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
+import net.sparktank.gameutil.table.swt.HexTablePainter;
 
 public class Mecha extends AbstractHexPiece {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -42,6 +43,7 @@ public class Mecha extends AbstractHexPiece {
 		return ID;
 	}
 	
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -67,9 +69,11 @@ public class Mecha extends AbstractHexPiece {
 	
 	static public void paintHexPiece(HexPiece piece, GC gc, Rectangle rect) {
 		Color c = gc.getBackground();
-		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_YELLOW));
+		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_RED));
 		gc.fillOval(rect.x + rect.width / 2 - 5, rect.y + rect.height / 2 - 5, 10, 10);
 		gc.setBackground(c);
+		
+		HexTablePainter.drawTextHVCen(gc, rect.x + rect.width/2, rect.y + rect.height/2 - 5, piece.getName());
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

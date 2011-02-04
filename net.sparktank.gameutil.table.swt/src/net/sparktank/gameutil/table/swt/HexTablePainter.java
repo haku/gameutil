@@ -27,6 +27,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
@@ -77,17 +78,19 @@ public class HexTablePainter implements PaintListener {
 			final int y = (int) (((coord.getY() - firstCoord.getY()) * cellSize) * HEXPITCH);
 			final Rectangle rect = new Rectangle(x, y, cellSize, cellSize);
 			
-			// Draw cell and coordinate label.
-			final String s = coord.getX() + "," + coord.getY();
-			drawTextHVCen(e, rect.x + halfCellSize, rect.y + halfCellSize, s);
+			// Draw cell.
 			e.gc.drawOval(rect.x, rect.y, rect.width, rect.height);
 			
-			// Draw pieces.
+			// Draw pieces?
 			final Collection<? extends HexPiece> pieces = this.config.getHexTable().getHexPieces(coord);
-			if (pieces != null) {
+			if (pieces != null && pieces.size() > 0) {
     			for (HexPiece piece : pieces) {
     				this.piecePainter.paintHexPiece(piece, e.gc, rect);
     			}
+			}
+			else {// Draw coordinate label only if cell is empty.
+				final String s = coord.getX() + "," + coord.getY();
+				drawTextHVCen(e.gc, rect.x + halfCellSize, rect.y + halfCellSize, s);
 			}
 			
 			// Work out which cell we need to draw next.
@@ -115,15 +118,15 @@ public class HexTablePainter implements PaintListener {
 //		return new Rectangle(_left, top, textSize.x, textSize.y);
 //	}
 	
-	static private Rectangle drawTextHVCen (PaintEvent e, int x, int y, String... text) {
+	static public Rectangle drawTextHVCen (GC gc, int x, int y, String... text) {
 		Rectangle ret = new Rectangle(x, y, 0, 0);
 		
 		for (int i=0; i < text.length; i++) {
-			Point textSize = e.gc.textExtent(text[i]);
+			Point textSize = gc.textExtent(text[i]);
 			int _left = x - (textSize.x / 2);
 			int _top = y + (textSize.y) * i - (textSize.y * text.length) / 2;
 			
-			e.gc.drawText(text[i], _left, _top, SWT.TRANSPARENT);
+			gc.drawText(text[i], _left, _top, SWT.DRAW_TRANSPARENT);
 			
 			if (ret.x > _left) ret.x = _left;
 			if (ret.y > _top) ret.y = _top;
@@ -134,9 +137,9 @@ public class HexTablePainter implements PaintListener {
 		return ret;
 	}
 	
-	static private Rectangle drawTextHVCen (PaintEvent e, int x, int y, String text) {
+	static public Rectangle drawTextHVCen (GC gc, int x, int y, String text) {
 		String[] split = text.split("\n");
-		return drawTextHVCen(e, x, y, split);
+		return drawTextHVCen(gc, x, y, split);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

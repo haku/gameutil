@@ -20,6 +20,7 @@ public interface Piece {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public int getId();
+	public String getName();
 	
 	public Coordinates getCoordinates ();
 	public Vector getVector ();
