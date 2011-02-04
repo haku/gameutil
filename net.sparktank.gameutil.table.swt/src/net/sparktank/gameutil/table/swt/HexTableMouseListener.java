@@ -65,9 +65,9 @@ public class HexTableMouseListener implements MouseListener {
 		
 		int visibleCellY = (int) (y / (cellSize * HexTablePainter.HEXPITCH));
 		
-		int rowIndent = (visibleCellY % 2) * halfCellSize; // 0 of halfCellSize.
-		int rowOffset = visibleCellY / 2; //The number of cells x is shifted by.  Increases by 1 for every 2 rows down.
-		int visibleCellX = (x - rowIndent) / cellSize - rowOffset;
+		int rowIndent = (visibleCellY % 2) * halfCellSize; // 0 or halfCellSize.
+		int rowOffset = visibleCellY / 2; // The number of cells x is shifted by.  Increases by 1 for every 2 rows down.
+		int visibleCellX = (int) Math.floor(((x - rowIndent) / (float)cellSize) - rowOffset);
 		
 		int cellY = topLeftCell.getCoordinates().getY() + visibleCellY;
 		int cellX = topLeftCell.getCoordinates().getX() + visibleCellX;
