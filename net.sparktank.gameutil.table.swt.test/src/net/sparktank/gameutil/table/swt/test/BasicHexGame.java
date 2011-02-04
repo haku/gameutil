@@ -64,8 +64,8 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		this.config.setEventListener(this);
 		
 		// Add test objects.
-		this.config.getHexTable().addHexPiece(new Mecha(this.config.getHexTable().getHexCoordinates(3, 3), "Alpha"));
-		this.config.getHexTable().addHexPiece(new Mecha(this.config.getHexTable().getHexCoordinates(2, 5), "Beta"));
+		this.config.getHexTable().addHexPiece(new Mecha(this.config.getHexTable().getHexCoordinates(1, 2), "Alpha"));
+		this.config.getHexTable().addHexPiece(new Mecha(this.config.getHexTable().getHexCoordinates(9, 17), "Beta"));
 	}
 	
 	private void run() {
