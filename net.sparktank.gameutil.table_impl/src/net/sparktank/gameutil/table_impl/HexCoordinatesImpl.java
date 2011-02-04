@@ -199,7 +199,7 @@ public class HexCoordinatesImpl implements HexCoordinates {
 		if ( !(aThat instanceof HexCoordinatesImpl) ) return false;
 		HexCoordinatesImpl that = (HexCoordinatesImpl)aThat;
 		
-		return this.equals(that);
+		return that.getX() == this.x && that.getY() == this.y;
 	}
 	
 	@Override
