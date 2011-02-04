@@ -37,7 +37,7 @@ public class HexTableImpl implements HexTable {
     private final int width;
     private final int height;
 	
-    private final Map<Long, HexPiece> pieces;
+    private final Map<Long, Collection<HexPiece>> pieces;
     
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Constructors.
@@ -51,7 +51,7 @@ public class HexTableImpl implements HexTable {
 		this.width = width;
 		this.height = height;
 		
-		this.pieces = new HashMap<Long, HexPiece>();
+		this.pieces = new HashMap<Long, Collection<HexPiece>>();
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -68,18 +68,66 @@ public class HexTableImpl implements HexTable {
 	}
 	
 	@Override
-	public Collection<? extends HexPiece> getHexPieces () {
-		return this.pieces.values();
+	public Collection<? extends HexPiece> getHexPieces() {
+		List<HexPiece> ret = new LinkedList<HexPiece>();
+		for (Collection<HexPiece> e : this.pieces.values()) {
+			ret.addAll(e);
+		}
+		return ret;
+	}
+	
+	@Override
+	public Collection<? extends HexPiece> getHexPieces (HexCoordinates coordinates) {
+		return this.pieces.get(getHexCoordinatesHash(coordinates));
 	}
 	
 	@Override
 	public Collection<? extends HexPiece> getHexPieces (List<? extends HexCoordinates> coordinates) {
 		List<HexPiece> ret = new LinkedList<HexPiece>();
 		for (HexCoordinates coord : coordinates) {
-			HexPiece p = this.pieces.get(getHexCoordinatesHash(coord));
-			if (p != null) ret.add(p);
+			Collection<HexPiece> ps = this.pieces.get(getHexCoordinatesHash(coord));
+			if (ps != null) ret.addAll(ps);
 		}
 		return ret;
+	}
+	
+	@Override
+	public void addHexPiece (HexPiece piece) {
+		if (piece == null) throw new IllegalArgumentException("piece can not be null.");
+		HexCoordinates coords = piece.getHexCoordinates();
+		if (coords == null) throw new IllegalArgumentException("piece's coords can not be null.");
+		
+		Long l = getHexCoordinatesHash(coords);
+		Collection<HexPiece> c = this.pieces.get(l);
+		if (c == null) {
+			c = new LinkedList<HexPiece>();
+			this.pieces.put(l, c);
+		}
+		
+		c.add(piece);
+	}
+	
+	@Override
+	public void updateHexPiece (HexPiece piece, HexCoordinates oldCoordinates) {
+		if (oldCoordinates == null) throw new IllegalArgumentException("oldCoordinates can not be null.");
+		
+		Long l = getHexCoordinatesHash(oldCoordinates);
+		Collection<HexPiece> c = this.pieces.get(l);
+		c.remove(piece);
+		
+		addHexPiece(piece);
+	}
+	
+	@Override
+	public boolean removeHexPiece (HexPiece piece) {
+		if (piece == null) throw new IllegalArgumentException("piece can not be null.");
+		HexCoordinates coords = piece.getHexCoordinates();
+		if (coords == null) throw new IllegalArgumentException("piece's coords can not be null.");
+		
+		Long l = getHexCoordinatesHash(coords);
+		Collection<HexPiece> c = this.pieces.get(l);
+		
+		return c.remove(piece);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -35,12 +35,23 @@ public interface HexTable extends Table {
 	 */
 	public Collection<? extends HexPiece> getHexPieces ();
 	
+	public Collection<? extends HexPiece> getHexPieces (HexCoordinates coordinates);
+	
 	/**
 	 * Returns all the HexPiece instances on the table that are referenced by the coordinates parameter.
 	 * Any illegal entries (coordinates for which no cell exists) are ignored.
 	 * The HexPiece instances will be returned in the same order as the HexCoordinates were passed in.
 	 */
 	public Collection<? extends HexPiece> getHexPieces (List<? extends HexCoordinates> coordinates);
+	
+	public void addHexPiece (HexPiece piece);
+	
+	/**
+	 * Call this if a piece is moved.
+	 */
+	public void updateHexPiece (HexPiece piece, HexCoordinates oldCoordinates);
+	
+	public boolean removeHexPiece (HexPiece piece);
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

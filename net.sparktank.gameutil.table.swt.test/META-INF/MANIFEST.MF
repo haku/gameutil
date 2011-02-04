@@ -5,7 +5,8 @@ Bundle-SymbolicName: net.sparktank.gameutil.table.swt.test
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: sparktank.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: net.sparktank.gameutil.table.hex,
+Import-Package: net.sparktank.gameutil.table,
+ net.sparktank.gameutil.table.hex,
  net.sparktank.gameutil.table.swt,
  net.sparktank.gameutil.table_impl,
  org.eclipse.swt,

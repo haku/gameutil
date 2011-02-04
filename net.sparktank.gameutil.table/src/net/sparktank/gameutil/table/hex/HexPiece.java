@@ -22,7 +22,10 @@ public interface HexPiece extends Piece {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public HexCoordinates getHexCoordinates ();
+	public void setHexCoordinates (HexCoordinates coordinates);
+	
 	public HexVector getHexVector ();
+	public void setHexVector (HexVector vector);
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

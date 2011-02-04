@@ -19,6 +19,8 @@ package net.sparktank.gameutil.table;
 public interface Piece {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	public int getId();
+	
 	public Coordinates getCoordinates ();
 	public Vector getVector ();
 	
