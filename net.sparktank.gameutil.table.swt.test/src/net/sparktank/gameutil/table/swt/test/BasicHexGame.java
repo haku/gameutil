@@ -56,6 +56,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	
 	private final HexTableConfig config;
 	private Canvas tableCanvas;
+	private HexTablePainter tablePainter;
 	
 	public BasicHexGame () {
 		// Create table.
@@ -77,9 +78,9 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		
 		// Setup GUI.
 		this.tableCanvas = new Canvas(shell, SWT.NONE);
-		HexTablePainter painter = new HexTablePainter(this.config, this.tableCanvas, this, this);
+		this.tablePainter = new HexTablePainter(this.config, this.tableCanvas, this, this);
 		HexTableMouseListener mouseListener = new HexTableMouseListener(this.config);
-		this.tableCanvas.addPaintListener(painter);
+		this.tableCanvas.addPaintListener(this.tablePainter);
 		this.tableCanvas.addMouseListener(mouseListener);
 		
 		// Show shell.
@@ -130,7 +131,6 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 			Collection<? extends HexPiece> pieces = table.getHexPieces(cell);
 			if (pieces != null && pieces.size() > 0) {
 				HexPiece piece = pieces.iterator().next();
-				
 				if (piece instanceof Mecha) {
 					Mecha mecha = (Mecha) piece;
 					
@@ -139,11 +139,12 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 					this.selectedPieceAnnotation = new SelectedMechaAnnotation(cell, mecha);
 					table.addHexCellAnnotation(this.selectedPieceAnnotation);
 					
+					this.tablePainter.setDrawGrid(true);
 					this.tableCanvas.redraw();
 					System.out.println("Selected mecha " + piece);
 				}
 				else {
-					System.out.println("do not know how to select piece " + piece);
+					System.out.println("Do not know how to select piece " + piece);
 				}
 			}
 		}
@@ -154,6 +155,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 			}
 			
 			table.removeHexCellAnnotation(this.selectedPieceAnnotation);
+			this.tablePainter.setDrawGrid(false);
 			this.tableCanvas.redraw();
 			
 			this.selectedPiece = null;

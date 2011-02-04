@@ -45,6 +45,8 @@ public class HexTablePainter implements PaintListener {
 	private final HexPiecePainter piecePainter;
 	private final HexCellAnnotationPainter cellAnnotationPainter;
 	
+	private boolean drawGrid = false;
+	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public HexTablePainter (HexTableConfig config, Canvas canvas, HexPiecePainter piecePainter, HexCellAnnotationPainter cellAnnotationPainter) {
@@ -59,6 +61,13 @@ public class HexTablePainter implements PaintListener {
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	public void setDrawGrid (boolean b) {
+		this.drawGrid = b;
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	PaintListener methods.
 	
 	@Override
 	public void paintControl(final PaintEvent e) {
@@ -97,14 +106,16 @@ public class HexTablePainter implements PaintListener {
     			}
 			}
 			
-			// Draw cell.
-			e.gc.setForeground(e.gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
-			e.gc.drawOval(rect.x, rect.y, rect.width, rect.height);
-			
-			// Draw coordinate label only if cell is empty.
-			if ((annotations == null || annotations.size() < 1) && (pieces == null || pieces.size() < 1)) {
-				final String s = coord.getX() + "," + coord.getY();
-				drawTextHVCen(e.gc, rect.x + halfCellSize, rect.y + halfCellSize, s);
+			if (this.drawGrid) {
+    			// Draw cell.
+    			e.gc.setForeground(e.gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
+    			e.gc.drawOval(rect.x, rect.y, rect.width, rect.height);
+    			
+    			// Draw coordinate label only if cell is empty.
+    			if ((annotations == null || annotations.size() < 1) && (pieces == null || pieces.size() < 1)) {
+    				final String s = coord.getX() + "," + coord.getY();
+    				drawTextHVCen(e.gc, rect.x + halfCellSize, rect.y + halfCellSize, s);
+    			}
 			}
 			
 			// Work out which cell we need to draw next.

@@ -211,7 +211,7 @@ public class HexTableImpl implements HexTable {
 	
 	@Override
 	public Collection<? extends Annotation> getAnnotations() {
-		throw new RuntimeException("Not implemented.");
+		return getHexCellAnnotations();
 	}
 	
 	@Override
