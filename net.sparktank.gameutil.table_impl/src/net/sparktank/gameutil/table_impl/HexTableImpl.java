@@ -109,6 +109,7 @@ public class HexTableImpl implements HexTable {
 	
 	@Override
 	public void updateHexPiece (HexPiece piece, HexCoordinates oldCoordinates) {
+		if (piece == null) throw new IllegalArgumentException("piece can not be null.");
 		if (oldCoordinates == null) throw new IllegalArgumentException("oldCoordinates can not be null.");
 		
 		Long l = getHexCoordinatesHash(oldCoordinates);
@@ -116,6 +117,16 @@ public class HexTableImpl implements HexTable {
 		c.remove(piece);
 		
 		addHexPiece(piece);
+	}
+	
+	@Override
+	public void moveHexPiece(HexPiece piece, HexCoordinates newCoordinates) {
+		if (piece == null) throw new IllegalArgumentException("piece can not be null.");
+		if (newCoordinates == null) throw new IllegalArgumentException("newCoordinates can not be null.");
+		
+		HexCoordinates oldCoord = piece.getHexCoordinates();
+		piece.setHexCoordinates(newCoordinates);
+		updateHexPiece(piece, oldCoord);
 	}
 	
 	@Override

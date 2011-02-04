@@ -51,6 +51,8 @@ public interface HexTable extends Table {
 	 */
 	public void updateHexPiece (HexPiece piece, HexCoordinates oldCoordinates);
 	
+	public void moveHexPiece (HexPiece piece, HexCoordinates newCoordinates);
+	
 	public boolean removeHexPiece (HexPiece piece);
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

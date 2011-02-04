@@ -48,8 +48,18 @@ public class Mecha extends AbstractHexPiece {
 	
 	@Override
 	public String toString () {
-		if (this.name != null) return "Mecha" + getId() + "/" + this.name;
-		return "Mecha" + getId();
+		StringBuilder s = new StringBuilder();
+		s.append("Mecha");
+		s.append(getId());
+		if (this.name != null) {
+			s.append("/");
+			s.append(this.name);
+		}
+		if (this.getHexCoordinates() != null) {
+			s.append("/");
+			s.append(this.getHexCoordinates());
+		}
+		return s.toString();
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

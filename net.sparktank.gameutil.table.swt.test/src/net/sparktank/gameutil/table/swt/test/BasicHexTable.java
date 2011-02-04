@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
+import net.sparktank.gameutil.table.hex.HexTable;
 import net.sparktank.gameutil.table.swt.HexPiecePainter;
 import net.sparktank.gameutil.table.swt.HexTableConfig;
 import net.sparktank.gameutil.table.swt.HexTableEventListener;
@@ -52,6 +53,7 @@ public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	private final HexTableConfig config;
+	private Canvas tableCanvas;
 	
 	public BasicHexTable () {
 		// Create table.
@@ -72,11 +74,11 @@ public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
 		shell.setLayout(new FillLayout());
 		
 		// Setup GUI.
-		Canvas canvas = new Canvas(shell, SWT.NONE);
-		HexTablePainter painter = new HexTablePainter(this.config, canvas, this);
+		this.tableCanvas = new Canvas(shell, SWT.NONE);
+		HexTablePainter painter = new HexTablePainter(this.config, this.tableCanvas, this);
 		HexTableMouseListener mouseListener = new HexTableMouseListener(this.config);
-		canvas.addPaintListener(painter);
-		canvas.addMouseListener(mouseListener);
+		this.tableCanvas.addPaintListener(painter);
+		this.tableCanvas.addMouseListener(mouseListener);
 		
 		// Show shell.
 		shell.open ();
@@ -102,11 +104,25 @@ public class BasicHexTable implements HexPiecePainter, HexTableEventListener {
 		}
 	}
 	
+	private HexPiece selectedPiece = null;
+	
 	@Override
 	public void cellClicked (HexCoordinates cell) {
-		Collection<? extends HexPiece> pieces = this.config.getHexTable().getHexPieces(cell);
-		if (pieces != null && pieces.size() > 0) {
-			System.out.println ("piece=" + pieces.toArray()[0]);
+		HexTable table = this.config.getHexTable();
+		
+		if (this.selectedPiece == null) {
+			Collection<? extends HexPiece> pieces = table.getHexPieces(cell);
+			if (pieces != null && pieces.size() > 0) {
+				HexPiece piece = pieces.iterator().next();
+				this.selectedPiece = piece;
+				System.out.println("Selected piece " + piece);
+			}
+		}
+		else {
+			table.moveHexPiece(this.selectedPiece, cell);
+			this.tableCanvas.redraw();
+			System.out.println("placed piece " + this.selectedPiece);
+			this.selectedPiece = null;
 		}
 	}
 	
