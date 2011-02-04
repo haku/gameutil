@@ -44,11 +44,11 @@ import org.eclipse.swt.widgets.Shell;
  *
  * @author haku
  */
-public class BasicHexTable implements HexPiecePainter, HexCellAnnotationPainter, HexTableEventListener {
+public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, HexTableEventListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public static void main(String[] args) {
-		BasicHexTable a = new BasicHexTable();
+		BasicHexGame a = new BasicHexGame();
 		a.run();
 	}
 	
@@ -57,7 +57,7 @@ public class BasicHexTable implements HexPiecePainter, HexCellAnnotationPainter,
 	private final HexTableConfig config;
 	private Canvas tableCanvas;
 	
-	public BasicHexTable () {
+	public BasicHexGame () {
 		// Create table.
 		HexTableImpl table = new HexTableImpl(20, 20);
 		this.config = new HexTableConfig(table, table.getHexCoordinates(0, 0));
