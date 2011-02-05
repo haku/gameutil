@@ -26,6 +26,7 @@ import net.sparktank.gameutil.table.hex.HexPiece;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
@@ -46,6 +47,8 @@ public class HexTablePainter implements PaintListener {
 	private final HexCellAnnotationPainter cellAnnotationPainter;
 	
 	private boolean drawGrid = false;
+	private boolean drawCellCoordinates = false;
+	private Color gridColour = null;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
@@ -64,6 +67,16 @@ public class HexTablePainter implements PaintListener {
 	
 	public void setDrawGrid (boolean b) {
 		this.drawGrid = b;
+	}
+	
+	public void setDrawCellCoordinates (boolean b) {
+		this.drawCellCoordinates = b;
+	}
+	
+	public void setGridColour (Color colour) {
+		if (colour == null) throw new IllegalArgumentException("colour == null");
+		if (colour.isDisposed()) throw new IllegalArgumentException("colour is disposed.");
+		this.gridColour = colour;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -108,11 +121,11 @@ public class HexTablePainter implements PaintListener {
 			
 			if (this.drawGrid) {
     			// Draw cell.
-    			e.gc.setForeground(e.gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
+    			if (this.gridColour != null) e.gc.setForeground(this.gridColour);
     			e.gc.drawOval(rect.x, rect.y, rect.width, rect.height);
     			
     			// Draw coordinate label only if cell is empty.
-    			if ((annotations == null || annotations.size() < 1) && (pieces == null || pieces.size() < 1)) {
+    			if (this.drawCellCoordinates && (annotations == null || annotations.size() < 1) && (pieces == null || pieces.size() < 1)) {
     				final String s = coord.getX() + "," + coord.getY();
     				drawTextHVCen(e.gc, rect.x + halfCellSize, rect.y + halfCellSize, s);
     			}

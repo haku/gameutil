@@ -60,7 +60,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	
 	public BasicHexGame () {
 		// Create table.
-		HexTableImpl table = new HexTableImpl(20, 20);
+		HexTableImpl table = new HexTableImpl(25, 25);
 		this.config = new HexTableConfig(table, table.getHexCoordinates(0, 0));
 		this.config.setEventListener(this);
 		
@@ -72,13 +72,17 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	private void run() {
 		Display display = new Display ();
 		Shell shell = new Shell (display);
-		shell.setText ("HexTable Test");
-		shell.setSize (800, 800);
+		shell.setText ("Basic hexgrid game");
+		shell.setSize (800, 700);
 		shell.setLayout(new FillLayout());
 		
 		// Setup GUI.
 		this.tableCanvas = new Canvas(shell, SWT.NONE);
+		this.tableCanvas.setBackground(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		this.tablePainter = new HexTablePainter(this.config, this.tableCanvas, this, this);
+		this.tablePainter.setGridColour(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+		this.tablePainter.setDrawGrid(true);
+		
 		HexTableMouseListener mouseListener = new HexTableMouseListener(this.config);
 		this.tableCanvas.addPaintListener(this.tablePainter);
 		this.tableCanvas.addMouseListener(mouseListener);
@@ -139,7 +143,6 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 					this.selectedPieceAnnotation = new SelectedMechaAnnotation(cell, mecha);
 					table.addHexCellAnnotation(this.selectedPieceAnnotation);
 					
-					this.tablePainter.setDrawGrid(true);
 					this.tableCanvas.redraw();
 					System.out.println("Selected mecha " + piece);
 				}
@@ -155,7 +158,6 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 			}
 			
 			table.removeHexCellAnnotation(this.selectedPieceAnnotation);
-			this.tablePainter.setDrawGrid(false);
 			this.tableCanvas.redraw();
 			
 			this.selectedPiece = null;
