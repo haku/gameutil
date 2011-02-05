@@ -24,7 +24,6 @@ import net.sparktank.gameutil.table.hex.HexPiece;
 import net.sparktank.gameutil.table.hex.HexTable;
 import net.sparktank.gameutil.table.swt.HexCellAnnotationPainter;
 import net.sparktank.gameutil.table.swt.HexPiecePainter;
-import net.sparktank.gameutil.table.swt.HexTableConfig;
 import net.sparktank.gameutil.table.swt.HexTableEventListener;
 import net.sparktank.gameutil.table.swt.HexTablePainter;
 import net.sparktank.gameutil.table_impl.HexTableImpl;
@@ -53,20 +52,17 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	private final HexTableConfig config;
+	private final HexTable table;
 	private Canvas tableCanvas;
 	private HexTablePainter tablePainter;
 	
 	public BasicHexGame () {
 		// Create table.
-		HexTableImpl table = new HexTableImpl(25, 25);
-		this.config = new HexTableConfig(table, table.getHexCoordinates(0, 0));
-		
-		this.config.setEventListener(this);
+		this.table = new HexTableImpl(25, 25);
 		
 		// Add test objects.
-		this.config.getHexTable().addHexPiece(new Mecha(this.config.getHexTable().getHexCoordinates(1, 2), "Alpha"));
-		this.config.getHexTable().addHexPiece(new Mecha(this.config.getHexTable().getHexCoordinates(9, 17), "Beta"));
+		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(1, 2), "Alpha"));
+		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(9, 17), "Beta"));
 	}
 	
 	private void run() {
@@ -77,7 +73,10 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		shell.setLayout(new FillLayout());
 		
 		// Setup painter.
-		this.tablePainter = new HexTablePainter(this.config, this, this);
+		this.tablePainter = new HexTablePainter(this.table, this.table.getHexCoordinates(0, 0));
+		this.tablePainter.setEventListener(this);
+		this.tablePainter.setPiecePainter(this);
+		this.tablePainter.setCellAnnotationPainter(this);
 		this.tablePainter.setDrawGrid(true);
 		this.tablePainter.setGridColour(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 		
@@ -129,10 +128,8 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	
 	@Override
 	public void cellClicked (HexCoordinates cell) {
-		HexTable table = this.config.getHexTable();
-		
 		if (cell != null && this.selectedPiece == null) {
-			Collection<? extends HexPiece> pieces = table.getHexPieces(cell);
+			Collection<? extends HexPiece> pieces = this.table.getHexPieces(cell);
 			if (pieces != null && pieces.size() > 0) {
 				HexPiece piece = pieces.iterator().next();
 				if (piece instanceof Mecha) {
@@ -141,7 +138,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 					this.selectedPiece = piece;
 					
 					this.selectedPieceAnnotation = new SelectedMechaAnnotation(cell, mecha);
-					table.addHexCellAnnotation(this.selectedPieceAnnotation);
+					this.table.addHexCellAnnotation(this.selectedPieceAnnotation);
 					
 					this.tableCanvas.redraw();
 					System.out.println("Selected mecha " + piece);
@@ -153,11 +150,11 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		}
 		else if (this.selectedPiece != null) {
 			if (cell != null && this.selectedPieceAnnotation.affectsCell(cell)) {
-				table.moveHexPiece(this.selectedPiece, cell);
+				this.table.moveHexPiece(this.selectedPiece, cell);
 				System.out.println("placed piece " + this.selectedPiece);
 			}
 			
-			table.removeHexCellAnnotation(this.selectedPieceAnnotation);
+			this.table.removeHexCellAnnotation(this.selectedPieceAnnotation);
 			this.tableCanvas.redraw();
 			
 			this.selectedPiece = null;
