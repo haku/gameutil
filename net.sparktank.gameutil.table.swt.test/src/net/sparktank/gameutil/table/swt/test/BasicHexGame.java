@@ -82,9 +82,9 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		this.tablePainter = new HexTablePainter(this.config, this.tableCanvas, this, this);
 		this.tablePainter.setGridColour(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 		this.tablePainter.setDrawGrid(true);
+		this.tableCanvas.addPaintListener(this.tablePainter);
 		
 		HexTableMouseListener mouseListener = new HexTableMouseListener(this.config);
-		this.tableCanvas.addPaintListener(this.tablePainter);
 		this.tableCanvas.addMouseListener(mouseListener);
 		
 		// Show shell.
@@ -131,7 +131,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	public void cellClicked (HexCoordinates cell) {
 		HexTable table = this.config.getHexTable();
 		
-		if (this.selectedPiece == null) {
+		if (cell != null && this.selectedPiece == null) {
 			Collection<? extends HexPiece> pieces = table.getHexPieces(cell);
 			if (pieces != null && pieces.size() > 0) {
 				HexPiece piece = pieces.iterator().next();
@@ -151,8 +151,8 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 				}
 			}
 		}
-		else {
-			if (this.selectedPieceAnnotation.affectsCell(cell)) {
+		else if (this.selectedPiece != null) {
+			if (cell != null && this.selectedPieceAnnotation.affectsCell(cell)) {
 				table.moveHexPiece(this.selectedPiece, cell);
 				System.out.println("placed piece " + this.selectedPiece);
 			}
@@ -162,7 +162,6 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 			
 			this.selectedPiece = null;
 			this.selectedPieceAnnotation = null;
-			
 		}
 	}
 	
