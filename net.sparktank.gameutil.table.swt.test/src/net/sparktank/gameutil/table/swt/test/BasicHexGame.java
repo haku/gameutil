@@ -24,8 +24,8 @@ import net.sparktank.gameutil.table.hex.HexPiece;
 import net.sparktank.gameutil.table.hex.HexTable;
 import net.sparktank.gameutil.table.swt.HexCellAnnotationPainter;
 import net.sparktank.gameutil.table.swt.HexPiecePainter;
+import net.sparktank.gameutil.table.swt.HexTableCanvas;
 import net.sparktank.gameutil.table.swt.HexTableEventListener;
-import net.sparktank.gameutil.table.swt.HexTablePainter;
 import net.sparktank.gameutil.table_impl.HexTableImpl;
 
 import org.eclipse.swt.SWT;
@@ -33,7 +33,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -53,8 +52,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	private final HexTable table;
-	private Canvas tableCanvas;
-	private HexTablePainter tablePainter;
+	private HexTableCanvas tableCanvas;
 	
 	public BasicHexGame () {
 		// Create table.
@@ -72,19 +70,15 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		shell.setSize (800, 700);
 		shell.setLayout(new FillLayout());
 		
-		// Setup painter.
-		this.tablePainter = new HexTablePainter(this.table, this.table.getHexCoordinates(0, 0));
-		this.tablePainter.setEventListener(this);
-		this.tablePainter.setPiecePainter(this);
-		this.tablePainter.setCellAnnotationPainter(this);
-		this.tablePainter.setDrawGrid(true);
-		this.tablePainter.setGridColour(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-		
-		// Setup canvas.
-		this.tableCanvas = new Canvas(shell, SWT.NONE);
+		// Setup HexTableCanvas control.
+		this.tableCanvas = new HexTableCanvas(shell);
+		this.tableCanvas.setHexTable(this.table, this.table.getHexCoordinates(0, 0));
 		this.tableCanvas.setBackground(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		this.tableCanvas.addPaintListener(this.tablePainter);
-		this.tableCanvas.addMouseListener(this.tablePainter);
+		this.tableCanvas.setPiecePainter(this);
+		this.tableCanvas.setCellAnnotationPainter(this);
+		this.tableCanvas.setDrawGrid(true);
+		this.tableCanvas.setGridColour(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+		this.tableCanvas.setEventListener(this);
 		
 		// Show shell.
 		shell.open ();
@@ -93,6 +87,8 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		}
 		display.dispose ();
 	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	@Override
 	public void paintHexCellAnnotation(HexCellAnnotation annotation, HexCoordinates coordinates, GC gc, Rectangle rect) {
@@ -122,6 +118,8 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 				
 		}
 	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	private HexPiece selectedPiece = null;
 	private SelectedMechaAnnotation selectedPieceAnnotation = null;

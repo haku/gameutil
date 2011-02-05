@@ -36,8 +36,9 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
 
-public class HexTablePainter implements PaintListener, MouseListener {
+public class HexTableCanvas extends Canvas implements PaintListener, MouseListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public static final double HEXPITCH = 0.866; // sqrt(0.75)
@@ -46,8 +47,7 @@ public class HexTablePainter implements PaintListener, MouseListener {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	private final HexTable hexTable;
-	
+	private HexTable hexTable;
 	private HexCoordinates topLeftCoordinates = null;
 	private int cellSize = DEFAULTCELLSIZE;
 	private HexTableEventListener eventListener = null;
@@ -59,17 +59,24 @@ public class HexTablePainter implements PaintListener, MouseListener {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public HexTablePainter (HexTable hexTable, HexCoordinates topLeftCoordinates) {
-		if (hexTable == null) throw new IllegalArgumentException("hexTable==null");
-		if (topLeftCoordinates == null) throw new IllegalArgumentException("topLeftCoordinates==null");
-		this.hexTable = hexTable;
-		this.topLeftCoordinates = topLeftCoordinates;
+	public HexTableCanvas (Composite parent) {
+		super(parent, SWT.NONE);
+		
+		addPaintListener(this);
+		addMouseListener(this);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	Properties.
 	
+	public void setHexTable(HexTable hexTable, HexCoordinates hexCoordinates) {
+		if (hexTable == null) throw new IllegalArgumentException("hexTable==null");
+		setTopLeftCoordinates(hexCoordinates);
+		this.hexTable = hexTable;
+	}
+	
 	public void setTopLeftCoordinates(HexCoordinates topLeftCoordinates) {
+		if (topLeftCoordinates == null) throw new IllegalArgumentException("topLeftCoordinates==null");
 		this.topLeftCoordinates = topLeftCoordinates;
 	}
 	
@@ -179,6 +186,7 @@ public class HexTablePainter implements PaintListener, MouseListener {
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	MouseListener methods.
 	
 	@Override
 	public void mouseDown(MouseEvent e) {
@@ -203,7 +211,7 @@ public class HexTablePainter implements PaintListener, MouseListener {
 	protected HexCoordinates getCoordinatesFromXY (int x, int y) {
 		int halfCellSize = this.cellSize / 2;
 		
-		int visibleCellY = (int) (y / (this.cellSize * HexTablePainter.HEXPITCH));
+		int visibleCellY = (int) (y / (this.cellSize * HEXPITCH));
 		
 		int rowIndent = (visibleCellY % 2) * halfCellSize; // 0 or halfCellSize.
 		int rowOffset = visibleCellY / 2; // The number of cells x is shifted by.  Increases by 1 for every 2 rows down.

@@ -18,7 +18,7 @@ package net.sparktank.gameutil.table.swt.test;
 
 import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
-import net.sparktank.gameutil.table.swt.HexTablePainter;
+import net.sparktank.gameutil.table.swt.HexTableCanvas;
 import net.sparktank.gameutil.table_impl.AbstractHexPiece;
 
 import org.eclipse.swt.SWT;
@@ -97,7 +97,7 @@ public class Mecha extends AbstractHexPiece {
 		gc.fillOval(rect.x + rect.width / 2 - 5, rect.y + rect.height / 2 - 5, 10, 10);
 		
 		gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_WHITE));
-		HexTablePainter.drawTextHVCen(gc, rect.x + rect.width/2, rect.y + rect.height/2 - 5, piece.getName());
+		HexTableCanvas.drawTextHVCen(gc, rect.x + rect.width/2, rect.y + rect.height/2 - 5, piece.getName());
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
