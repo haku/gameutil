@@ -50,17 +50,9 @@ public class DebrisFieldAnnotation implements HexCellAnnotation {
 	/**
 	 * Helper constructor for rectangular tables.
 	 */
-	public DebrisFieldAnnotation (HexTable table, int width, int height, int count) {
+	public DebrisFieldAnnotation (HexTable table, Random random, int count) {
 		Map<HexCoordinates, Void> m = new HashMap<HexCoordinates, Void>();
-		
-		Random random = new Random(System.currentTimeMillis());
-		for (int i = 0; i < count; i++) {
-			int y = random.nextInt(height);
-			int x = random.nextInt(width) - y/2;
-			HexCoordinates c = table.getHexCoordinates(x, y);
-			if (c != null) m.put(c, null);
-		}
-		
+		for (int i = 0; i < count; i++) m.put(table.getRandomHexCoordinates(random), null);
 		this.affectedCells = Collections.unmodifiableMap(m);
 	}
 	

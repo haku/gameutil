@@ -17,6 +17,7 @@
 package net.sparktank.gameutil.table.swt.test;
 
 import java.util.Collection;
+import java.util.Random;
 
 import net.sparktank.gameutil.table.hex.HexCellAnnotation;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
@@ -64,12 +65,14 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		// Create table.
 		this.table = new HexTableImpl(TABLE_WIDTH, TABLE_HEIGHT);
 		
-		// Add test objects.
-		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(1, 2), "Alpha"));
-		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(2, 20), "Beta"));
-		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(20, 3), "Gamma"));
+		Random random = new Random(System.currentTimeMillis());
 		
-		this.debrisField = new DebrisFieldAnnotation(this.table, TABLE_WIDTH, TABLE_HEIGHT, 40);
+		// Add test objects.
+		this.table.addHexPiece(new Mecha(this.table.getRandomHexCoordinates(random), "Alpha"));
+		this.table.addHexPiece(new Mecha(this.table.getRandomHexCoordinates(random), "Beta"));
+		this.table.addHexPiece(new Mecha(this.table.getRandomHexCoordinates(random), "Gamma"));
+		
+		this.debrisField = new DebrisFieldAnnotation(this.table, random, 40);
 		this.table.addHexCellAnnotation(this.debrisField);
 	}
 	

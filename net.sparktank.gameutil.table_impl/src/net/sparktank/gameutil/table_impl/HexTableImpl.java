@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import net.sparktank.gameutil.table.Annotation;
 import net.sparktank.gameutil.table.CellAnnotation;
@@ -73,6 +74,14 @@ public class HexTableImpl implements HexTable {
 		if (x < rowOffset || x >= rowOffset + this.width) return null;
 		
 		return new HexCoordinatesImpl(x, y);
+	}
+	
+	@Override
+	public HexCoordinates getRandomHexCoordinates (Random random) {
+		int y = random.nextInt(this.height);
+		int x = random.nextInt(this.width) - y/2;
+		HexCoordinates c = getHexCoordinates(x, y);
+		return c;
 	}
 	
 	@Override

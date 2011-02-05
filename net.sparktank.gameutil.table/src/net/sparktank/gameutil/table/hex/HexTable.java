@@ -18,6 +18,7 @@ package net.sparktank.gameutil.table.hex;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import net.sparktank.gameutil.table.Table;
 
@@ -29,6 +30,8 @@ public interface HexTable extends Table {
 	 * Returns null if the coordinates are out of range.
 	 */
 	public HexCoordinates getHexCoordinates (int x, int y);
+	
+	public HexCoordinates getRandomHexCoordinates (Random random);
 	
 	/**
 	 * Returns all the HexPiece instances on the table.
