@@ -26,7 +26,6 @@ import net.sparktank.gameutil.table.swt.HexCellAnnotationPainter;
 import net.sparktank.gameutil.table.swt.HexPiecePainter;
 import net.sparktank.gameutil.table.swt.HexTableConfig;
 import net.sparktank.gameutil.table.swt.HexTableEventListener;
-import net.sparktank.gameutil.table.swt.HexTableMouseListener;
 import net.sparktank.gameutil.table.swt.HexTablePainter;
 import net.sparktank.gameutil.table_impl.HexTableImpl;
 
@@ -62,6 +61,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		// Create table.
 		HexTableImpl table = new HexTableImpl(25, 25);
 		this.config = new HexTableConfig(table, table.getHexCoordinates(0, 0));
+		
 		this.config.setEventListener(this);
 		
 		// Add test objects.
@@ -76,16 +76,16 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		shell.setSize (800, 700);
 		shell.setLayout(new FillLayout());
 		
-		// Setup GUI.
+		// Setup painter.
+		this.tablePainter = new HexTablePainter(this.config, this, this);
+		this.tablePainter.setDrawGrid(true);
+		this.tablePainter.setGridColour(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+		
+		// Setup canvas.
 		this.tableCanvas = new Canvas(shell, SWT.NONE);
 		this.tableCanvas.setBackground(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		this.tablePainter = new HexTablePainter(this.config, this.tableCanvas, this, this);
-		this.tablePainter.setGridColour(this.tableCanvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-		this.tablePainter.setDrawGrid(true);
 		this.tableCanvas.addPaintListener(this.tablePainter);
-		
-		HexTableMouseListener mouseListener = new HexTableMouseListener(this.config);
-		this.tableCanvas.addMouseListener(mouseListener);
+		this.tableCanvas.addMouseListener(this.tablePainter);
 		
 		// Show shell.
 		shell.open ();

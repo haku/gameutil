@@ -24,6 +24,8 @@ import net.sparktank.gameutil.table.hex.HexCoordinates;
 import net.sparktank.gameutil.table.hex.HexPiece;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -34,36 +36,42 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 
-public class HexTablePainter implements PaintListener {
+public class HexTablePainter implements PaintListener, MouseListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public static final double HEXPITCH = 0.866; // sqrt(0.75)
 	
+	private static final int DEFAULTCELLSIZE = 30; // px.
+	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	private final HexTableConfig config;
-	private final Canvas canvas;
 	private final HexPiecePainter piecePainter;
 	private final HexCellAnnotationPainter cellAnnotationPainter;
 	
+	private int cellSize = DEFAULTCELLSIZE;
 	private boolean drawGrid = false;
 	private boolean drawCellCoordinates = false;
 	private Color gridColour = null;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public HexTablePainter (HexTableConfig config, Canvas canvas, HexPiecePainter piecePainter, HexCellAnnotationPainter cellAnnotationPainter) {
+	public HexTablePainter (HexTableConfig config, HexPiecePainter piecePainter, HexCellAnnotationPainter cellAnnotationPainter) {
 		this.cellAnnotationPainter = cellAnnotationPainter;
 		if (config == null) throw new IllegalArgumentException("config==null");
-		if (canvas == null) throw new IllegalArgumentException("canvas==null");
 		if (piecePainter == null) throw new IllegalArgumentException("piecePainter==null");
 		
 		this.config = config;
-		this.canvas = canvas;
 		this.piecePainter = piecePainter;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	Properties.
+	
+	public void setCellSize(int cellSize) {
+		this.cellSize = cellSize;
+	}
+	
 	
 	public void setDrawGrid (boolean b) {
 		this.drawGrid = b;
@@ -84,13 +92,13 @@ public class HexTablePainter implements PaintListener {
 	
 	@Override
 	public void paintControl(final PaintEvent e) {
-		final Rectangle clientArea = this.canvas.getClientArea();
+		Canvas canvas = (Canvas) e.widget;
+		final Rectangle clientArea = canvas.getClientArea();
 		
-		final int cellSize = this.config.getCellSize();
-		final int halfCellSize = cellSize / 2;
+		final int halfCellSize = this.cellSize / 2;
 		
 		final FontData fontData = e.gc.getFont().getFontData()[0];
-		final Font font = new Font(e.gc.getDevice(), fontData.getName(), cellSize / 4, fontData.getStyle());
+		final Font font = new Font(e.gc.getDevice(), fontData.getName(), this.cellSize / 4, fontData.getStyle());
 		e.gc.setFont(font);
 		
 		final HexCoordinates firstCoord = this.config.getTopLeftCoordinates(); // The top-left most cell to draw.
@@ -99,9 +107,9 @@ public class HexTablePainter implements PaintListener {
 		int rowNumber = 0; // The row we are drawing, where 0 is at the top of the screen.
 		int leftIndent = 0; // How much to indent the current row (either 0 or HALFCELLSIZE).
 		while (coord != null) {
-			final int x = (coord.getX() - firstCoord.getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * cellSize + leftIndent;
-			final int y = (int) (((coord.getY() - firstCoord.getY()) * cellSize) * HEXPITCH);
-			final Rectangle rect = new Rectangle(x, y, cellSize, cellSize);
+			final int x = (coord.getX() - firstCoord.getX() + ((rowNumber / 2) * HexBearing.EAST.getDx())) * this.cellSize + leftIndent;
+			final int y = (int) (((coord.getY() - firstCoord.getY()) * this.cellSize) * HEXPITCH);
+			final Rectangle rect = new Rectangle(x, y, this.cellSize, this.cellSize);
 			
 			// Draw cell annotations?
 			Collection<? extends HexCellAnnotation> annotations = this.config.getHexTable().getHexCellAnnotations(coord);
@@ -145,6 +153,47 @@ public class HexTablePainter implements PaintListener {
 		}
 		
 		font.dispose();
+	}
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
+	@Override
+	public void mouseDown(MouseEvent e) {
+		HexTableEventListener eventListener = this.config.getEventListener();
+		if (eventListener != null) {
+			HexCoordinates cell = getCoordinatesFromXY(e.x, e.y);
+			eventListener.cellClicked(cell);
+		}
+	}
+	
+	@Override
+	public void mouseUp(MouseEvent e) {
+//		HexCell cell = getCellFromXY(e.x, e.y);
+//		System.out.println("mouseUp=" + cell);
+	}
+	
+	@Override
+	public void mouseDoubleClick(MouseEvent e) {
+//		HexCell cell = getCellFromXY(e.x, e.y);
+//		System.out.println("mouseDoubleClick=" + cell);
+	}
+	
+	protected HexCoordinates getCoordinatesFromXY (int x, int y) {
+		HexCoordinates topLeftCoordinates = this.config.getTopLeftCoordinates();
+		int halfCellSize = this.cellSize / 2;
+		
+		int visibleCellY = (int) (y / (this.cellSize * HexTablePainter.HEXPITCH));
+		
+		int rowIndent = (visibleCellY % 2) * halfCellSize; // 0 or halfCellSize.
+		int rowOffset = visibleCellY / 2; // The number of cells x is shifted by.  Increases by 1 for every 2 rows down.
+		int visibleCellX = (int) Math.floor((x - rowIndent) / (float)this.cellSize) - rowOffset; // Round down, not towards 0.
+		
+		int cellY = topLeftCoordinates.getY() + visibleCellY;
+		int cellX = topLeftCoordinates.getX() + visibleCellX;
+		
+		HexCoordinates cell = this.config.getHexTable().getHexCoordinates(cellX, cellY);
+		
+		return cell;
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
