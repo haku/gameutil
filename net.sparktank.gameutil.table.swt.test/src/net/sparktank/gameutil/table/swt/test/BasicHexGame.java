@@ -56,7 +56,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	
 	public BasicHexGame () {
 		// Create table.
-		this.table = new HexTableImpl(25, 25);
+		this.table = new HexTableImpl(60, 35);
 		
 		// Add test objects.
 		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(1, 2), "Alpha"));
@@ -69,6 +69,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		Shell shell = new Shell (display);
 		shell.setText ("Basic hexgrid game");
 		shell.setSize (800, 700);
+		shell.setMaximized(true);
 		shell.setLayout(new FillLayout());
 		
 		// Setup HexTableCanvas control.
