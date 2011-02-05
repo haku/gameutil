@@ -30,7 +30,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
-public class SelectedMechaAnnotation implements HexCellAnnotation {
+public class MechaThrustAnnotation implements HexCellAnnotation {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public static final int TYPEID = 200;
@@ -42,7 +42,7 @@ public class SelectedMechaAnnotation implements HexCellAnnotation {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	public SelectedMechaAnnotation (HexCoordinates centre, Mecha mecha) {
+	public MechaThrustAnnotation (HexCoordinates centre, Mecha mecha) {
 		Map<HexCoordinates, Void> m = new HashMap<HexCoordinates, Void>();
 		Map<HexCoordinates, Void> mo = new HashMap<HexCoordinates, Void>();
 		for (Entry<Integer, List<? extends HexCoordinates>> v : centre.getAdjacentHexCoordinates(mecha.getMaxThrust()).entrySet()) {
@@ -79,8 +79,8 @@ public class SelectedMechaAnnotation implements HexCellAnnotation {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	static public void paintHexCellAnnotation(SelectedMechaAnnotation annotation, HexCoordinates coordinates, GC gc, Rectangle rect) {
-		gc.setBackground(gc.getDevice().getSystemColor(annotation.isOverthrust(coordinates) ? SWT.COLOR_DARK_RED : SWT.COLOR_DARK_GREEN));
+	static public void paintHexCellAnnotation(MechaThrustAnnotation annotation, HexCoordinates coordinates, GC gc, Rectangle rect) {
+		gc.setBackground(gc.getDevice().getSystemColor(annotation.isOverthrust(coordinates) ? SWT.COLOR_DARK_YELLOW : SWT.COLOR_DARK_GREEN));
 		gc.fillOval(rect.x, rect.y, rect.width, rect.height);
 	}
 	

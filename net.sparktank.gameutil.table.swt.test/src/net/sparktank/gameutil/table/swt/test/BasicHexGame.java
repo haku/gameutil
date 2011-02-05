@@ -60,7 +60,8 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		
 		// Add test objects.
 		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(1, 2), "Alpha"));
-		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(9, 17), "Beta"));
+		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(2, 20), "Beta"));
+		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(20, 3), "Gamma"));
 	}
 	
 	private void run() {
@@ -93,8 +94,8 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	@Override
 	public void paintHexCellAnnotation(HexCellAnnotation annotation, HexCoordinates coordinates, GC gc, Rectangle rect) {
 		switch (annotation.getTypeId()) {
-			case (SelectedMechaAnnotation.TYPEID):
-				SelectedMechaAnnotation.paintHexCellAnnotation((SelectedMechaAnnotation) annotation, coordinates, gc, rect);
+			case (MechaThrustAnnotation.TYPEID):
+				MechaThrustAnnotation.paintHexCellAnnotation((MechaThrustAnnotation) annotation, coordinates, gc, rect);
 				break;
 			
 			default:
@@ -122,7 +123,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	private HexPiece selectedPiece = null;
-	private SelectedMechaAnnotation selectedPieceAnnotation = null;
+	private MechaThrustAnnotation selectedPieceAnnotation = null;
 	
 	@Override
 	public void cellClicked (HexCoordinates cell) {
@@ -135,7 +136,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 					
 					this.selectedPiece = piece;
 					
-					this.selectedPieceAnnotation = new SelectedMechaAnnotation(cell, mecha);
+					this.selectedPieceAnnotation = new MechaThrustAnnotation(cell, mecha);
 					this.table.addHexCellAnnotation(this.selectedPieceAnnotation);
 					
 					this.tableCanvas.redraw();
