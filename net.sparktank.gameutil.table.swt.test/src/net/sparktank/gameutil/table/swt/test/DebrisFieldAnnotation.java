@@ -19,54 +19,55 @@ package net.sparktank.gameutil.table.swt.test;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Random;
 
 import net.sparktank.gameutil.table.hex.HexCellAnnotation;
 import net.sparktank.gameutil.table.hex.HexCoordinates;
+import net.sparktank.gameutil.table.hex.HexTable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
-public class MechaThrustAnnotation implements HexCellAnnotation {
+public class DebrisFieldAnnotation implements HexCellAnnotation {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public static final int TYPEID = 200;
+	public static final int TYPEID = 201;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	private final Map<HexCoordinates, Void> affectedCells;
-	private final Map<HexCoordinates, Void> affectedCellsOverthrust;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public MechaThrustAnnotation (HexCoordinates centre, Mecha mecha, Collection<? extends HexCoordinates> illegalCells) {
-		Map<HexCoordinates, Void> illegalCellMap = null;
-		if (illegalCells != null) {
-			illegalCellMap = new HashMap<HexCoordinates, Void>();
-			for (HexCoordinates c : illegalCells) illegalCellMap.put(c, null);
+	public DebrisFieldAnnotation (Collection<HexCoordinates> coords) {
+		Map<HexCoordinates, Void> m = new HashMap<HexCoordinates, Void>();
+		for (HexCoordinates c : coords) m.put(c, null);
+		this.affectedCells = Collections.unmodifiableMap(m);
+	}
+	
+	/**
+	 * Helper constructor for rectangular tables.
+	 */
+	public DebrisFieldAnnotation (HexTable table, int width, int height, int count) {
+		Map<HexCoordinates, Void> m = new HashMap<HexCoordinates, Void>();
+		
+		Random random = new Random(System.currentTimeMillis());
+		for (int i = 0; i < count; i++) {
+			int y = random.nextInt(height);
+			int x = random.nextInt(width) - y/2;
+			HexCoordinates c = table.getHexCoordinates(x, y);
+			if (c != null) m.put(c, null);
 		}
 		
-		Map<HexCoordinates, Void> m = new HashMap<HexCoordinates, Void>();
-		Map<HexCoordinates, Void> mo = new HashMap<HexCoordinates, Void>();
-		for (Entry<Integer, List<? extends HexCoordinates>> v : centre.getAdjacentHexCoordinates(mecha.getMaxThrust()).entrySet()) {
-			if (v.getKey().intValue() == 0) continue;
-			for (HexCoordinates c : v.getValue()) {
-				if (illegalCellMap != null && illegalCellMap.containsKey(c)) continue;
-				if (v.getKey().intValue() >= mecha.getOverThrust()) mo.put(c, null);
-				m.put(c, null);
-			}
-		}
 		this.affectedCells = Collections.unmodifiableMap(m);
-		this.affectedCellsOverthrust = Collections.unmodifiableMap(mo);
 	}
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	@Override
-	public int getTypeId () {
+	public int getTypeId() {
 		return TYPEID;
 	}
 	
@@ -82,14 +83,8 @@ public class MechaThrustAnnotation implements HexCellAnnotation {
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public boolean isOverthrust (HexCoordinates coordinates) {
-		return this.affectedCellsOverthrust.containsKey(coordinates);
-	}
-	
-//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	
-	static public void paintHexCellAnnotation(MechaThrustAnnotation annotation, HexCoordinates coordinates, GC gc, Rectangle rect) {
-		gc.setBackground(gc.getDevice().getSystemColor(annotation.isOverthrust(coordinates) ? SWT.COLOR_DARK_YELLOW : SWT.COLOR_DARK_GREEN));
+	static public void paintHexCellAnnotation (DebrisFieldAnnotation annotation, HexCoordinates coordinates, GC gc, Rectangle rect) {
+		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
 		gc.fillOval(rect.x, rect.y, rect.width, rect.height);
 	}
 	

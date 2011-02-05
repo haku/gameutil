@@ -44,6 +44,11 @@ import org.eclipse.swt.widgets.Shell;
 public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, HexTableEventListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
+	private static final int TABLE_HEIGHT = 35;
+	private static final int TABLE_WIDTH = 60;
+	
+//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	public static void main(String[] args) {
 		BasicHexGame a = new BasicHexGame();
 		a.run();
@@ -53,15 +58,19 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 	
 	private final HexTable table;
 	private HexTableCanvas tableCanvas;
+	DebrisFieldAnnotation debrisField;
 	
 	public BasicHexGame () {
 		// Create table.
-		this.table = new HexTableImpl(60, 35);
+		this.table = new HexTableImpl(TABLE_WIDTH, TABLE_HEIGHT);
 		
 		// Add test objects.
 		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(1, 2), "Alpha"));
 		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(2, 20), "Beta"));
 		this.table.addHexPiece(new Mecha(this.table.getHexCoordinates(20, 3), "Gamma"));
+		
+		this.debrisField = new DebrisFieldAnnotation(this.table, TABLE_WIDTH, TABLE_HEIGHT, 40);
+		this.table.addHexCellAnnotation(this.debrisField);
 	}
 	
 	private void run() {
@@ -97,6 +106,10 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 		switch (annotation.getTypeId()) {
 			case (MechaThrustAnnotation.TYPEID):
 				MechaThrustAnnotation.paintHexCellAnnotation((MechaThrustAnnotation) annotation, coordinates, gc, rect);
+				break;
+			
+			case (DebrisFieldAnnotation.TYPEID):
+				DebrisFieldAnnotation.paintHexCellAnnotation((DebrisFieldAnnotation) annotation, coordinates, gc, rect);
 				break;
 			
 			default:
@@ -137,7 +150,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 					
 					this.selectedPiece = piece;
 					
-					this.selectedPieceAnnotation = new MechaThrustAnnotation(cell, mecha);
+					this.selectedPieceAnnotation = new MechaThrustAnnotation(cell, mecha, this.debrisField.getAffectedCells());
 					this.table.addHexCellAnnotation(this.selectedPieceAnnotation);
 					
 					this.tableCanvas.redraw();
@@ -149,7 +162,7 @@ public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, 
 			}
 		}
 		else if (this.selectedPiece != null) {
-			if (cell != null && this.selectedPieceAnnotation.affectsCell(cell)) {
+			if (cell != null && this.selectedPieceAnnotation.affectsCell(cell) && !this.debrisField.affectsCell(cell)) {
 				this.table.moveHexPiece(this.selectedPiece, cell);
 				System.out.println("placed piece " + this.selectedPiece);
 			}
