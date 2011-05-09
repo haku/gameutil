@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.Shell;
 public class BasicHexGame implements HexPiecePainter, HexCellAnnotationPainter, HexTableEventListener {
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	private static final int TABLE_HEIGHT = 35;
-	private static final int TABLE_WIDTH = 60;
+	private static final int TABLE_HEIGHT = 20;
+	private static final int TABLE_WIDTH = 20;
 	
 //	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
